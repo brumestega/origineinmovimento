@@ -13,7 +13,7 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.inner}>
         {/* Header su sfondo chiaro → variante logo scura */}
-        <Logo variant="light" />
+        <Logo variant="light" size={78} />
 
         <nav className={styles.nav} aria-label="Navigazione principale">
           {navItems.map((item) => (
