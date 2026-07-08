@@ -1,0 +1,206 @@
+/* =====================================================================
+   Origine in Movimento — stili globali e design token
+   Palette e tipografia dal file di design ad alta fedeltà, con le
+   correzioni della Fase 1 (oro come gradiente brillante).
+   ===================================================================== */
+
+:root {
+  /* Sfondi */
+  --bg: #faf6ec; /* avorio caldo — dominante */
+  --bg-alt: #f1e9d8;
+  --card: #ffffff;
+  --card-gradient: linear-gradient(160deg, #ffffff, #fbf6e9);
+
+  /* Testo */
+  --text: #241d3d;
+  --text-body: #5c5570;
+  --text-muted: #8a8398;
+
+  /* Brand */
+  --primary: #7a1b3d; /* rosso ultravioletto — CTA */
+  --primary-hover: #5c1530;
+  --indigo: #1e1464; /* viola indaco — hero / overlay / impatto */
+
+  /* Oro brillante (gradiente) — sostituisce la tinta piatta del design */
+  --gold-gradient: linear-gradient(
+    135deg,
+    #8b6914 0%,
+    #d4af37 25%,
+    #f4e5b2 50%,
+    #d4af37 75%,
+    #8b6914 100%
+  );
+  /* Oro "tenue" per bordi/sfondi appena accennati (tint, non tinta piatta) */
+  --gold-soft-border: rgba(156, 107, 34, 0.28);
+  --gold-soft-bg: rgba(156, 107, 34, 0.08);
+
+  /* Accessori */
+  --whatsapp: #25d366;
+
+  /* Tipografia (variabili impostate da next/font in layout.tsx) */
+  --font-display: var(--font-cormorant), Georgia, serif;
+  --font-body: var(--font-jost), system-ui, sans-serif;
+
+  --maxw: 1180px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--bg);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* --- Oro brillante applicato al testo (titoli / eyebrow / glifi) --- */
+.gold-text {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Linea decorativa oro */
+.gold-rule {
+  height: 2px;
+  border: 0;
+  background: var(--gold-gradient);
+}
+
+/* Eyebrow (piccolo maiuscoletto sopra i titoli) */
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+}
+
+/* --- Pulsanti / pill --- */
+.btn {
+  display: inline-block;
+  cursor: pointer;
+  border: none;
+  border-radius: 40px;
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+  text-align: center;
+  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--bg);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  color: var(--bg);
+}
+
+.btn-outline-gold {
+  background: transparent;
+  border: 1px solid rgba(242, 216, 120, 0.4);
+  color: #f2d878;
+}
+
+.btn-outline-gold:hover {
+  border-color: rgba(242, 216, 120, 0.8);
+  color: #f7e9b6;
+}
+
+/* --- Card --- */
+.card {
+  background: var(--card);
+  border: 1px solid rgba(34, 28, 54, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 2px 14px rgba(34, 28, 54, 0.04);
+}
+
+.card-accent {
+  background: var(--card-gradient);
+  border: 1px solid var(--gold-soft-border);
+  border-radius: 18px;
+}
+
+/* --- Contenitore --- */
+.container {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding-left: 34px;
+  padding-right: 34px;
+}
+
+/* --- Animazioni (hero abissi marini) --- */
+@keyframes oimTwinkle {
+  0%,
+  100% {
+    opacity: 0.14;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes oimRise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+  }
+}
+
+/* --- Responsive helpers --- */
+@media (max-width: 860px) {
+  .container {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+}

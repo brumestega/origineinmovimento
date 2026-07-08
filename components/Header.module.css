@@ -1,0 +1,102 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(250, 246, 236, 0.9);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(34, 28, 54, 0.08);
+}
+
+.inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 20px 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.link {
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  color: var(--text-body);
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--primary);
+}
+
+.cta {
+  padding: 10px 20px;
+  font-size: 12.5px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* Hamburger — nascosto su desktop */
+.toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+}
+
+.mobileMenu {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .inner {
+    padding: 16px 22px;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .toggle {
+    display: flex;
+  }
+
+  .mobileMenu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 22px 22px;
+    border-top: 1px solid rgba(34, 28, 54, 0.08);
+    background: rgba(250, 246, 236, 0.98);
+  }
+
+  .mobileLink {
+    padding: 12px 4px;
+    font-size: 15px;
+    color: var(--text-body);
+    border-bottom: 1px solid rgba(34, 28, 54, 0.06);
+  }
+
+  .mobileCta {
+    margin-top: 14px;
+    padding: 13px 20px;
+    font-size: 14px;
+    align-self: flex-start;
+  }
+}

@@ -1,0 +1,81 @@
+.section {
+  padding: 88px 34px;
+  background: var(--bg);
+}
+
+.card {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 56px 46px;
+  border-radius: 20px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 32px;
+  margin: 0 0 12px;
+  color: var(--text);
+}
+
+.body {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #6b6480;
+  font-weight: 300;
+  margin: 0 0 28px;
+}
+
+.form {
+  display: flex;
+  gap: 10px;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.input {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid rgba(34, 28, 54, 0.15);
+  border-radius: 40px;
+  padding: 14px 22px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+}
+
+.input:focus {
+  border-color: rgba(122, 27, 61, 0.5);
+}
+
+.button {
+  padding: 14px 26px;
+  font-size: 13.5px;
+  white-space: nowrap;
+}
+
+.thanks {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--primary);
+}
+
+@media (max-width: 560px) {
+  .section {
+    padding: 64px 22px;
+  }
+
+  .card {
+    padding: 40px 26px;
+  }
+
+  .form {
+    flex-direction: column;
+  }
+
+  .button {
+    align-self: center;
+  }
+}
