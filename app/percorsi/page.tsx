@@ -51,6 +51,14 @@ const services = [
     badge: 'badge-presenza',
     price: '88€',
   },
+  {
+    n: '06',
+    title: 'Rilevamento di geopatia in casa',
+    body: "Un sopralluogo fisico per individuare e sciogliere le interferenze energetiche nei tuoi spazi di vita.",
+    modality: 'Solo a domicilio',
+    badge: 'badge-domicilio',
+    price: '180€',
+  },
 ];
 
 const phases = [
