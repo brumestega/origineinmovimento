@@ -372,6 +372,40 @@ select.input-box { appearance: none; -webkit-appearance: none; background-image:
 .booking-done-p { font-size: 15px; line-height: 1.75; color: var(--body); font-weight: 300; max-width: 420px; margin: 0 auto; }
 .booking-done-p strong { color: var(--ink-soft); font-weight: 500; text-transform: capitalize; }
 
+/* Step 0 — scelta modalità online / in presenza */
+.mode-intro { margin-bottom: 18px; }
+.mode-intro .eyebrow-sm { font-size: 12px; letter-spacing: .28em; text-transform: uppercase; color: var(--accent); display: block; }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.mode-option {
+  display: flex; flex-direction: column; gap: 8px; text-align: left; cursor: pointer;
+  border: 1px solid var(--border-line); border-radius: 14px; padding: 22px 22px 20px;
+  background: var(--card); transition: border-color .18s, transform .18s, box-shadow .18s;
+}
+.mode-option:hover { border-color: rgba(156,107,34,.5); transform: translateY(-2px); box-shadow: var(--shadow-card); }
+.mode-option-t { font-size: 24px; font-weight: 500; color: var(--ink); line-height: 1; }
+.mode-option-d { font-size: 13.5px; line-height: 1.6; color: var(--body); font-weight: 300; flex: 1; }
+.mode-option-cta { font-size: 13px; letter-spacing: .03em; color: var(--primary); margin-top: 4px; }
+
+/* Percorso "in presenza" — da concordare via WhatsApp/email */
+.presence-box {
+  border: 1px solid rgba(156,107,34,.28); border-radius: 14px;
+  padding: 26px 26px 28px; background: var(--card);
+}
+.presence-box .eyebrow-sm { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px; }
+.presence-p { font-size: 15px; line-height: 1.75; color: var(--body); font-weight: 300; margin-bottom: 24px; }
+.presence-p strong { color: var(--ink-soft); font-weight: 500; }
+.presence-ctas { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.btn-wa {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--wa-green); color: #fff; border-radius: 40px;
+  padding: 13px 24px; font-size: 14px; letter-spacing: .03em;
+  transition: transform .2s, filter .2s;
+}
+.btn-wa:hover { color: #fff; transform: translateY(-1px); filter: brightness(.96); }
+.presence-email { font-size: 13.5px; color: var(--muted); font-weight: 300; }
+.presence-email:hover { color: var(--primary); }
+
 @media (max-width: 820px) {
   .booking-layout { grid-template-columns: 1fr; }
+  .mode-grid { grid-template-columns: 1fr; }
 }

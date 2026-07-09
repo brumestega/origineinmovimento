@@ -13,7 +13,15 @@ const MONTHS = [
 ];
 
 type Slot = { startUtc: string; time: string };
-type Step = 'date' | 'time' | 'form' | 'done';
+type Step = 'choose' | 'date' | 'time' | 'form' | 'done' | 'presence';
+
+// Contatti per concordare le sessioni in presenza (giorni definiti caso per caso).
+const WA_PRESENCE_HREF =
+  'https://wa.me/393479005251?text=' +
+  encodeURIComponent(
+    'Ciao Silvia, vorrei prenotare una sessione in presenza e concordare insieme una data.',
+  );
+const OWNER_EMAIL = 'origineinmovimento@gmail.com';
 
 function dateKey(y: number, m: number, d: number): string {
   return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
@@ -36,7 +44,7 @@ export default function BookingWidget() {
 
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [viewMonth, setViewMonth] = useState(today.getMonth());
-  const [step, setStep] = useState<Step>('date');
+  const [step, setStep] = useState<Step>('choose');
 
   const [selectedDate, setSelectedDate] = useState<{ y: number; m: number; d: number } | null>(null);
   const [slots, setSlots] = useState<Slot[]>([]);
@@ -129,7 +137,7 @@ export default function BookingWidget() {
 
   return (
     <div className="booking">
-      {step !== 'done' && (
+      {(step === 'date' || step === 'time' || step === 'form') && (
         <div className="booking-steps" aria-hidden="true">
           {['Data', 'Orario', 'I tuoi dati'].map((label, i) => (
             <div key={label} className={`booking-step ${i <= stepIndex ? 'is-active' : ''}`}>
@@ -140,9 +148,70 @@ export default function BookingWidget() {
         </div>
       )}
 
+      {/* STEP 0 — scelta modalità: online (self-service) o in presenza (da concordare) */}
+      {step === 'choose' && (
+        <div className="mode-panel">
+          <div className="mode-intro">
+            <span className="eyebrow-sm">Come preferisci incontrarci?</span>
+          </div>
+          <div className="mode-grid">
+            <button type="button" className="mode-option" onClick={() => setStep('date')}>
+              <span className="mode-option-t serif">Online</span>
+              <span className="mode-option-d">
+                Scegli tu giorno e orario dal calendario e ricevi subito la conferma.
+              </span>
+              <span className="mode-option-cta">Scegli un orario ›</span>
+            </button>
+            <button type="button" className="mode-option" onClick={() => setStep('presence')}>
+              <span className="mode-option-t serif">In presenza</span>
+              <span className="mode-option-d">
+                I giorni in studio li concordiamo insieme, di volta in volta.
+              </span>
+              <span className="mode-option-cta">Concordiamo la data ›</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Percorso "in presenza": nessuno slot fisso, si concorda via WhatsApp o email */}
+      {step === 'presence' && (
+        <div className="booking-panel">
+          <button type="button" className="booking-back" onClick={() => setStep('choose')}>
+            ‹ Torna indietro
+          </button>
+          <div className="presence-box">
+            <span className="eyebrow-sm">In presenza</span>
+            <p className="presence-p">
+              Le sessioni in presenza si tengono presso lo studio di Motta di Livenza (TV) in
+              giorni che definiamo <strong>caso per caso</strong>: non c'è uno slot automatico.
+              Scrivimi e troviamo insieme la data giusta per te.
+            </p>
+            <div className="presence-ctas">
+              <a
+                className="btn-wa"
+                href={WA_PRESENCE_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" aria-hidden>
+                  <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.22 8.22 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.82c0 4.54-3.69 8.23-8.28 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.16 1.75 2.67 4.25 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z" />
+                </svg>
+                Scrivimi su WhatsApp
+              </a>
+              <a className="presence-email" href={`mailto:${OWNER_EMAIL}`}>
+                oppure {OWNER_EMAIL}
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* STEP 1 — calendario */}
       {step === 'date' && (
         <div className="cal">
+          <button type="button" className="booking-back" onClick={() => setStep('choose')}>
+            ‹ Cambia modalità
+          </button>
           <div className="cal-head">
             <button
               type="button" className="cal-nav" onClick={goPrev} disabled={!canPrev}
