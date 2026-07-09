@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-type BookingType = 'call' | 'session';
+export type BookingType = 'call' | 'session';
 
 // Giorni prenotabili (0=dom … 6=sab) per tipo — coerente con lib/availability.ts.
 const WEEKDAYS_BY_TYPE: Record<BookingType, number[]> = {
@@ -39,7 +39,14 @@ const MONTHS = [
 ];
 
 type Slot = { startUtc: string; time: string };
-type Step = 'choose' | 'type' | 'date' | 'time' | 'form' | 'done' | 'presence';
+export type BookingStep = 'choose' | 'type' | 'date' | 'time' | 'form' | 'done' | 'presence';
+type Step = BookingStep;
+
+// La testata della pagina (titolo fisso + sottotitolo dinamico) vive nel wrapper
+// BookingSection: il widget la aggiorna comunicando tipo e step correnti.
+type Props = {
+  onStateChange?: (s: { bookingType: BookingType | null; step: BookingStep }) => void;
+};
 
 // Contatti per concordare le sessioni in presenza (giorni definiti caso per caso).
 const WA_PRESENCE_HREF =
@@ -58,7 +65,7 @@ function mondayFirstIndex(jsDay: number): number {
   return (jsDay + 6) % 7;
 }
 
-export default function BookingWidget() {
+export default function BookingWidget({ onStateChange }: Props) {
   const today = useMemo(() => {
     const n = new Date();
     return new Date(n.getFullYear(), n.getMonth(), n.getDate());
@@ -86,6 +93,11 @@ export default function BookingWidget() {
   const [submitError, setSubmitError] = useState('');
 
   const meta = bookingType ? TYPE_META[bookingType] : null;
+
+  // Comunica alla testata (BookingSection) tipo e step correnti, per il sottotitolo dinamico.
+  useEffect(() => {
+    onStateChange?.({ bookingType, step });
+  }, [bookingType, step, onStateChange]);
 
   // Griglia del mese in visualizzazione (giorni selezionabili in base al tipo scelto).
   const grid = useMemo(() => {
