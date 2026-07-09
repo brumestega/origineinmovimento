@@ -16,7 +16,7 @@
 
 import { google } from 'googleapis';
 import { TIMEZONE } from './timezone';
-import { CALL_DURATION_MIN } from './availability';
+import { BookingType, durationMin } from './availability';
 
 export function isCalendarConfigured(): boolean {
   return Boolean(
@@ -57,10 +57,10 @@ export async function getBusyIntervals(
     .map((b) => ({ start: b.start, end: b.end }));
 }
 
-// Verifica se un dato slot (inizio in ISO/UTC) è ancora libero.
-export async function isSlotFree(startUtcIso: string): Promise<boolean> {
+// Verifica se un dato slot (inizio in ISO/UTC, durata in minuti) è ancora libero.
+export async function isSlotFree(startUtcIso: string, durationMinutes: number): Promise<boolean> {
   const start = new Date(startUtcIso);
-  const end = new Date(start.getTime() + CALL_DURATION_MIN * 60000);
+  const end = new Date(start.getTime() + durationMinutes * 60000);
   const busy = await getBusyIntervals(start.toISOString(), end.toISOString());
   return !busy.some((b) => {
     const bStart = new Date(b.start).getTime();
@@ -70,6 +70,7 @@ export async function isSlotFree(startUtcIso: string): Promise<boolean> {
 }
 
 export type BookingDetails = {
+  type: BookingType;
   startUtcIso: string;
   clientName: string;
   clientEmail: string;
@@ -83,10 +84,18 @@ export type BookingDetails = {
 export async function createBookingEvent(details: BookingDetails) {
   const calendar = calendarClient();
   const start = new Date(details.startUtcIso);
-  const end = new Date(start.getTime() + CALL_DURATION_MIN * 60000);
+  const end = new Date(start.getTime() + durationMin(details.type) * 60000);
+
+  const isCall = details.type === 'call';
+  const summary = isCall
+    ? `Call conoscitiva (gratuita) · ${details.clientName}`
+    : `Sessione · ${details.clientName}`;
+  const intro = isCall
+    ? 'Call conoscitiva gratuita prenotata dal sito Origine in Movimento.'
+    : 'Sessione prenotata dal sito Origine in Movimento.';
 
   const descriptionLines = [
-    'Call conoscitiva prenotata dal sito Origine in Movimento.',
+    intro,
     '',
     '— Questionario breve —',
     `Nome: ${details.clientName}`,
@@ -108,7 +117,7 @@ export async function createBookingEvent(details: BookingDetails) {
     calendarId: calendarId(),
     sendUpdates: 'all',
     requestBody: {
-      summary: `Call conoscitiva · ${details.clientName}`,
+      summary,
       description: descriptionLines.join('\n'),
       start: { dateTime: start.toISOString(), timeZone: TIMEZONE },
       end: { dateTime: end.toISOString(), timeZone: TIMEZONE },

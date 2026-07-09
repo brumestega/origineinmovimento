@@ -1,10 +1,35 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-// Giorni prenotabili online (0=dom … 6=sab): tutti tranne il lunedì.
-// Coerente con lib/availability.ts (mattine tutti i giorni tranne lunedì; pomeriggi mer/ven).
-const BOOKABLE_WEEKDAYS = [0, 2, 3, 4, 5, 6];
+type BookingType = 'call' | 'session';
+
+// Giorni prenotabili (0=dom … 6=sab) per tipo — coerente con lib/availability.ts.
+const WEEKDAYS_BY_TYPE: Record<BookingType, number[]> = {
+  call: [3, 5], // mercoledì e venerdì
+  session: [0, 2, 3, 4, 5, 6], // tutti tranne lunedì
+};
+
+const TYPE_META: Record<
+  BookingType,
+  { label: string; duration: string; free: boolean; hint: string; confirmNoun: string }
+> = {
+  call: {
+    label: 'Call conoscitiva gratuita',
+    duration: '30 minuti',
+    free: true,
+    hint: 'Disponibile il mercoledì e il venerdì mattina (7:00–10:00).',
+    confirmNoun: 'la nostra call conoscitiva',
+  },
+  session: {
+    label: 'Sessione',
+    duration: '1 ora',
+    free: false,
+    hint: 'Mattine tutti i giorni tranne il lunedì; pomeriggi il mercoledì e il venerdì.',
+    confirmNoun: 'la nostra sessione',
+  },
+};
+
 const HORIZON_DAYS = 56;
 
 const WEEKDAY_LABELS = ['L', 'M', 'M', 'G', 'V', 'S', 'D'];
@@ -14,7 +39,7 @@ const MONTHS = [
 ];
 
 type Slot = { startUtc: string; time: string };
-type Step = 'choose' | 'date' | 'time' | 'form' | 'done' | 'presence';
+type Step = 'choose' | 'type' | 'date' | 'time' | 'form' | 'done' | 'presence';
 
 // Contatti per concordare le sessioni in presenza (giorni definiti caso per caso).
 const WA_PRESENCE_HREF =
@@ -46,6 +71,7 @@ export default function BookingWidget() {
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [step, setStep] = useState<Step>('choose');
+  const [bookingType, setBookingType] = useState<BookingType | null>(null);
 
   const [selectedDate, setSelectedDate] = useState<{ y: number; m: number; d: number } | null>(null);
   const [slots, setSlots] = useState<Slot[]>([]);
@@ -59,8 +85,11 @@ export default function BookingWidget() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
-  // Griglia del mese in visualizzazione.
+  const meta = bookingType ? TYPE_META[bookingType] : null;
+
+  // Griglia del mese in visualizzazione (giorni selezionabili in base al tipo scelto).
   const grid = useMemo(() => {
+    const weekdays = bookingType ? WEEKDAYS_BY_TYPE[bookingType] : [];
     const firstDow = mondayFirstIndex(new Date(viewYear, viewMonth, 1).getDay());
     const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
     const cells: Array<{ d: number; selectable: boolean } | null> = [];
@@ -68,11 +97,11 @@ export default function BookingWidget() {
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(viewYear, viewMonth, d);
       const selectable =
-        BOOKABLE_WEEKDAYS.includes(date.getDay()) && date >= today && date <= horizon;
+        weekdays.includes(date.getDay()) && date >= today && date <= horizon;
       cells.push({ d, selectable });
     }
     return cells;
-  }, [viewYear, viewMonth, today, horizon]);
+  }, [viewYear, viewMonth, today, horizon, bookingType]);
 
   const canPrev = viewYear > today.getFullYear() || viewMonth > today.getMonth();
   const canNext =
@@ -89,7 +118,17 @@ export default function BookingWidget() {
     if (m > 11) { setViewMonth(0); setViewYear((y) => y + 1); } else setViewMonth(m);
   }
 
+  function pickType(t: BookingType) {
+    setBookingType(t);
+    setSelectedDate(null);
+    setSelectedSlot(null);
+    setViewYear(today.getFullYear());
+    setViewMonth(today.getMonth());
+    setStep('date');
+  }
+
   async function pickDate(d: number) {
+    if (!bookingType) return;
     const sel = { y: viewYear, m: viewMonth, d };
     setSelectedDate(sel);
     setSelectedSlot(null);
@@ -98,7 +137,9 @@ export default function BookingWidget() {
     setSlotsError('');
     setSlots([]);
     try {
-      const res = await fetch(`/api/booking/slots?date=${dateKey(sel.y, sel.m, sel.d)}`);
+      const res = await fetch(
+        `/api/booking/slots?date=${dateKey(sel.y, sel.m, sel.d)}&type=${bookingType}`,
+      );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Errore nel recupero degli orari.');
       setSlots(data.slots || []);
@@ -111,14 +152,14 @@ export default function BookingWidget() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!selectedSlot) return;
+    if (!selectedSlot || !bookingType) return;
     setSubmitting(true);
     setSubmitError('');
     try {
       const res = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ startUtc: selectedSlot.startUtc, ...form }),
+        body: JSON.stringify({ type: bookingType, startUtc: selectedSlot.startUtc, ...form }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Non sono riuscita a confermare la prenotazione.');
@@ -149,19 +190,19 @@ export default function BookingWidget() {
         </div>
       )}
 
-      {/* STEP 0 — scelta modalità: online (self-service) o in presenza (da concordare) */}
+      {/* STEP 0 — modalità: online (self-service) o in presenza (da concordare) */}
       {step === 'choose' && (
         <div className="mode-panel">
           <div className="mode-intro">
             <span className="eyebrow-sm">Come preferisci incontrarci?</span>
           </div>
           <div className="mode-grid">
-            <button type="button" className="mode-option" onClick={() => setStep('date')}>
+            <button type="button" className="mode-option" onClick={() => setStep('type')}>
               <span className="mode-option-t serif">Online</span>
               <span className="mode-option-d">
                 Scegli tu giorno e orario dal calendario e ricevi subito la conferma.
               </span>
-              <span className="mode-option-cta">Scegli un orario ›</span>
+              <span className="mode-option-cta">Prosegui ›</span>
             </button>
             <button type="button" className="mode-option" onClick={() => setStep('presence')}>
               <span className="mode-option-t serif">In presenza</span>
@@ -169,6 +210,37 @@ export default function BookingWidget() {
                 I giorni in studio li concordiamo insieme, di volta in volta.
               </span>
               <span className="mode-option-cta">Concordiamo la data ›</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* STEP 0b — tipo di prenotazione online: call conoscitiva o sessione */}
+      {step === 'type' && (
+        <div className="mode-panel">
+          <button type="button" className="booking-back" onClick={() => setStep('choose')}>
+            ‹ Torna indietro
+          </button>
+          <div className="mode-intro">
+            <span className="eyebrow-sm">
+              Vuoi prenotare una call conoscitiva gratuita o una sessione?
+            </span>
+          </div>
+          <div className="mode-grid">
+            <button type="button" className="mode-option" onClick={() => pickType('call')}>
+              <span className="mode-option-badge">Gratuita</span>
+              <span className="mode-option-t serif">Call conoscitiva</span>
+              <span className="mode-option-d">
+                30 minuti per conoscerci e capire da dove partire. Mercoledì e venerdì mattina.
+              </span>
+              <span className="mode-option-cta">Scegli un orario ›</span>
+            </button>
+            <button type="button" className="mode-option" onClick={() => pickType('session')}>
+              <span className="mode-option-t serif">Sessione</span>
+              <span className="mode-option-d">
+                Un'ora insieme, per chi già mi conosce e vuole proseguire il cammino.
+              </span>
+              <span className="mode-option-cta">Scegli un orario ›</span>
             </button>
           </div>
         </div>
@@ -208,11 +280,14 @@ export default function BookingWidget() {
       )}
 
       {/* STEP 1 — calendario */}
-      {step === 'date' && (
+      {step === 'date' && meta && (
         <div className="cal">
-          <button type="button" className="booking-back" onClick={() => setStep('choose')}>
-            ‹ Cambia modalità
+          <button type="button" className="booking-back" onClick={() => setStep('type')}>
+            ‹ Cambia tipo
           </button>
+          <div className="booking-typebar">
+            {meta.label} · {meta.duration}
+          </div>
           <div className="cal-head">
             <button
               type="button" className="cal-nav" onClick={goPrev} disabled={!canPrev}
@@ -244,9 +319,7 @@ export default function BookingWidget() {
               ),
             )}
           </div>
-          <p className="cal-hint">
-            Mattine tutti i giorni tranne il lunedì; pomeriggi il mercoledì e il venerdì.
-          </p>
+          <p className="cal-hint">{meta.hint}</p>
         </div>
       )}
 
@@ -282,15 +355,15 @@ export default function BookingWidget() {
       )}
 
       {/* STEP 3 — questionario breve */}
-      {step === 'form' && selectedSlot && (
+      {step === 'form' && selectedSlot && meta && (
         <div className="booking-panel">
           <button type="button" className="booking-back" onClick={() => setStep('time')}>
             ‹ Cambia orario
           </button>
           <div className="booking-recap">
-            <span className="eyebrow-sm">Stai prenotando</span>
+            <span className="eyebrow-sm">{meta.label}</span>
             <div className="booking-recap-line">
-              {selectedDateLabel} · <strong>{selectedSlot.time}</strong> · 1 ora
+              {selectedDateLabel} · <strong>{selectedSlot.time}</strong> · {meta.duration}
             </div>
           </div>
 
@@ -337,19 +410,20 @@ export default function BookingWidget() {
               {submitting ? 'Confermo…' : 'Conferma la prenotazione'}
             </button>
             <p className="booking-fineprint">
-              Riceverai l'invito e il promemoria via email. La call è gratuita e senza impegno.
+              Riceverai l'invito e il promemoria via email.
+              {meta.free ? ' La call è gratuita e senza impegno.' : ''}
             </p>
           </form>
         </div>
       )}
 
       {/* Conferma finale */}
-      {step === 'done' && (
+      {step === 'done' && meta && (
         <div className="booking-done">
           <div className="booking-done-mark">✦</div>
           <h3 className="booking-done-title serif">È fatta.</h3>
           <p className="booking-done-p">
-            Ho fissato la nostra call per <strong>{selectedDateLabel}</strong> alle{' '}
+            Ho fissato {meta.confirmNoun} per <strong>{selectedDateLabel}</strong> alle{' '}
             <strong>{selectedSlot?.time}</strong>. Ti ho inviato l'invito via email con tutti i
             dettagli e un promemoria. A presto ✦
           </p>
