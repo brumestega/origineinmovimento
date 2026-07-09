@@ -1,17 +1,25 @@
-// Disponibilità per la call conoscitiva (30 minuti).
-// Le fasce riprendono gli orari dello studio: Martedì pomeriggio e Sabato mattina.
-// Modificare qui per cambiare i giorni/orari disponibili.
+// Disponibilità per le sessioni ONLINE (self-service).
+// Slot da 1 ora. Modificare qui per cambiare i giorni/orari disponibili.
+// (Le sessioni in presenza NON usano questa logica: si concordano via WhatsApp/email.)
 
 import { romeWallTimeToUtc, partsInRome } from './timezone';
 
-export const CALL_DURATION_MIN = 30;
+export const CALL_DURATION_MIN = 60;
 
 // getDay(): 0=domenica … 6=sabato
 type WeeklyWindow = { weekday: number; start: string; end: string };
 
 const WEEKLY_WINDOWS: WeeklyWindow[] = [
-  { weekday: 2, start: '15:30', end: '19:00' }, // Martedì 15:30–19:00
-  { weekday: 6, start: '09:00', end: '12:30' }, // Sabato 9:00–12:30
+  // Mattine: tutti i giorni tranne il lunedì, 7:00–11:00 (slot 7,8,9,10)
+  { weekday: 2, start: '07:00', end: '11:00' }, // Martedì
+  { weekday: 3, start: '07:00', end: '11:00' }, // Mercoledì
+  { weekday: 4, start: '07:00', end: '11:00' }, // Giovedì
+  { weekday: 5, start: '07:00', end: '11:00' }, // Venerdì
+  { weekday: 6, start: '07:00', end: '11:00' }, // Sabato
+  { weekday: 0, start: '07:00', end: '11:00' }, // Domenica
+  // Pomeriggi: solo mercoledì e venerdì, 17:00–22:00 (slot 17,18,19,20,21)
+  { weekday: 3, start: '17:00', end: '22:00' }, // Mercoledì
+  { weekday: 5, start: '17:00', end: '22:00' }, // Venerdì
 ];
 
 // Quanti giorni in avanti si può prenotare, e il preavviso minimo.

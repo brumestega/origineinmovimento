@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-// Giorni prenotabili (0=dom … 6=sab): Martedì e Sabato, coerente con lib/availability.ts.
-const BOOKABLE_WEEKDAYS = [2, 6];
+// Giorni prenotabili online (0=dom … 6=sab): tutti tranne il lunedì.
+// Coerente con lib/availability.ts (mattine tutti i giorni tranne lunedì; pomeriggi mer/ven).
+const BOOKABLE_WEEKDAYS = [0, 2, 3, 4, 5, 6];
 const HORIZON_DAYS = 56;
 
 const WEEKDAY_LABELS = ['L', 'M', 'M', 'G', 'V', 'S', 'D'];
@@ -243,7 +244,9 @@ export default function BookingWidget() {
               ),
             )}
           </div>
-          <p className="cal-hint">Disponibile il martedì pomeriggio e il sabato mattina.</p>
+          <p className="cal-hint">
+            Mattine tutti i giorni tranne il lunedì; pomeriggi il mercoledì e il venerdì.
+          </p>
         </div>
       )}
 
@@ -287,7 +290,7 @@ export default function BookingWidget() {
           <div className="booking-recap">
             <span className="eyebrow-sm">Stai prenotando</span>
             <div className="booking-recap-line">
-              {selectedDateLabel} · <strong>{selectedSlot.time}</strong> · 30 minuti
+              {selectedDateLabel} · <strong>{selectedSlot.time}</strong> · 1 ora
             </div>
           </div>
 
