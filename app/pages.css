@@ -283,6 +283,95 @@ textarea.input-box { resize: vertical; }
 .info-detail-h { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
 .info-detail { font-size: 15px; color: var(--ink-soft); line-height: 1.6; }
 
+.input-label { font-size: 12.5px; letter-spacing: .04em; color: var(--muted); font-weight: 300; margin: 4px 0 -4px; }
+select.input-box { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239C6B22' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer; }
+/* honeypot: fuori schermo, mai visibile né focusabile a mouse */
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
 @media (max-width: 820px) {
   .two-col, .contact-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------------- Prenotazione (BookingWidget) ---------------- */
+.booking-layout { display: grid; grid-template-columns: .82fr 1.18fr; gap: 22px; margin-bottom: 34px; align-items: start; }
+
+.booking-card {
+  border: 1px solid rgba(156,107,34,.28); border-radius: 18px;
+  padding: 30px 30px 34px; background: var(--card-accent); box-shadow: var(--shadow-card);
+}
+
+.booking-steps { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+.booking-step {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; letter-spacing: .04em; color: var(--muted); font-weight: 300;
+}
+.booking-step-n {
+  width: 22px; height: 22px; border-radius: 50%; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11.5px; border: 1px solid var(--border-line); color: var(--muted); background: var(--card);
+}
+.booking-step.is-active { color: var(--ink); }
+.booking-step.is-active .booking-step-n { background: var(--primary); border-color: var(--primary); color: var(--bg); }
+
+/* Calendario */
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.cal-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--ink); text-transform: capitalize; }
+.cal-nav {
+  width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
+  border: 1px solid var(--border-line); background: var(--card); color: var(--ink);
+  font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center;
+  transition: border-color .2s, color .2s;
+}
+.cal-nav:hover:not(:disabled) { border-color: rgba(156,107,34,.5); color: var(--primary); }
+.cal-nav:disabled { opacity: .3; cursor: default; }
+.cal-dow { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin-bottom: 6px; }
+.cal-dow span { text-align: center; font-size: 11px; letter-spacing: .1em; color: var(--muted); }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+.cal-empty { aspect-ratio: 1; }
+.cal-day {
+  aspect-ratio: 1; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--border-soft); background: var(--card); color: var(--ink);
+  font-family: 'Jost', sans-serif; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .18s, border-color .18s, color .18s;
+}
+.cal-day:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+.cal-day:disabled { color: rgba(138,131,152,.35); cursor: default; background: transparent; border-color: transparent; }
+.cal-hint { margin-top: 16px; font-size: 12.5px; color: var(--muted); font-weight: 300; text-align: center; }
+
+/* Pannelli step orario / form */
+.booking-panel { display: flex; flex-direction: column; }
+.booking-back {
+  align-self: flex-start; background: none; border: 0; cursor: pointer;
+  color: var(--primary); font-family: 'Jost', sans-serif; font-size: 13px; letter-spacing: .04em;
+  padding: 0 0 4px; margin-bottom: 14px;
+}
+.booking-back:hover { color: var(--primary-hover); }
+.booking-panel-h { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--ink); text-transform: capitalize; margin-bottom: 18px; }
+.booking-muted { font-size: 14px; color: var(--muted); font-weight: 300; }
+.booking-error { font-size: 13.5px; color: var(--primary); font-weight: 400; line-height: 1.5; }
+
+.slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 10px; }
+.slot-btn {
+  padding: 12px 8px; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--border-line); background: var(--card); color: var(--ink);
+  font-family: 'Jost', sans-serif; font-size: 14px; letter-spacing: .03em;
+  transition: background .18s, border-color .18s, color .18s;
+}
+.slot-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+.booking-recap { border: 1px solid rgba(156,107,34,.28); border-radius: 12px; padding: 16px 18px; background: var(--bg-alt); margin-bottom: 18px; }
+.booking-recap .eyebrow-sm { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 6px; }
+.booking-recap-line { font-size: 14.5px; color: var(--ink-soft); text-transform: capitalize; }
+.booking-recap-line strong { color: var(--primary); font-weight: 500; }
+.booking-fineprint { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.5; text-align: center; margin-top: 2px; }
+
+.booking-done { text-align: center; padding: 20px 10px 10px; animation: oimRise .6s ease both; }
+.booking-done-mark { font-size: 30px; color: var(--accent); margin-bottom: 10px; }
+.booking-done-title { font-weight: 500; font-size: 34px; color: var(--ink); margin-bottom: 14px; }
+.booking-done-p { font-size: 15px; line-height: 1.75; color: var(--body); font-weight: 300; max-width: 420px; margin: 0 auto; }
+.booking-done-p strong { color: var(--ink-soft); font-weight: 500; text-transform: capitalize; }
+
+@media (max-width: 820px) {
+  .booking-layout { grid-template-columns: 1fr; }
 }

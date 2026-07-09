@@ -47,8 +47,42 @@ public/assets/      hero-meduse.jpg, chi-sono.jpg
 
 - **Fase 1 — Fondamenta**: setup Next.js, token, Home ✅
 - **Fase 2 — Contenuti**: Chi sono, Il Metodo, Percorsi ✅
-- **Fase 3 — Funzionalità**: prenotazioni + Google Calendar, form contatti, calcolatori — da fare
+- **Fase 3 — Funzionalità**: prenotazioni + Google Calendar + questionario, form contatti ✅ · calcolatori — da fare
 - **Fase 4 — Rifinitura**: eventi, blog, testimonianze reali, link WhatsApp definitivo, deploy — da fare
+
+## Prenotazioni, questionario e form contatti (Fase 3a)
+
+Pagina **Prenota la call** (`app/prenota`, componente `components/BookingWidget.tsx`):
+flusso a 3 passaggi — calendario → orario → questionario breve — con conferma a schermo.
+Il questionario (nome, email, telefono, contatto preferito, motivo) è **l'ultimo passaggio
+prima di confermare**, non un'email separata: i suoi dati finiscono nella descrizione
+dell'evento Google Calendar.
+
+Disponibilità in `lib/availability.ts` (Martedì 15:30–19:00, Sabato 9:00–12:30, slot da 30′;
+modificare lì per cambiare giorni/orari). Fuso `Europe/Rome` gestito senza dipendenze in
+`lib/timezone.ts`.
+
+### API interne (route handler, runtime Node)
+
+- `GET /api/booking/slots?date=YYYY-MM-DD` — slot liberi del giorno (filtra il free/busy di
+  Google Calendar se configurato).
+- `POST /api/booking` — valida il questionario, ricontrolla lo slot e crea l'evento su Google
+  Calendar con inviti + promemoria email a cliente e titolare.
+- `POST /api/contact` — invia il messaggio del form contatti via Resend.
+
+Tutte degradano con grazia: senza credenziali configurate rispondono con un messaggio che
+rimanda a email/telefono, senza mai andare in errore.
+
+### Configurazione
+
+Copia `.env.example` → `.env.local` (in produzione: Environment Variables su Vercel) e compila:
+
+- **Google Calendar** (OAuth2 col refresh token dell'account Gmail di Silvia — un service account
+  non potrebbe inviare inviti da un Gmail personale): `GOOGLE_OAUTH_CLIENT_ID`,
+  `GOOGLE_OAUTH_CLIENT_SECRET`, `GOOGLE_OAUTH_REFRESH_TOKEN`, `GOOGLE_CALENDAR_ID`, `OWNER_EMAIL`.
+- **Email form contatti** (Resend): `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`.
+
+Istruzioni passo-passo per ottenere i valori nel file `.env.example`.
 
 I file `*.md` alla radice e `Origine in movimento design.zip` sono i documenti di
 brief/design e restano nel repo come riferimento.

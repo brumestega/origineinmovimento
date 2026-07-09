@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import BookingWidget from '@/components/BookingWidget';
 
 export const metadata: Metadata = {
   title: 'Prenota la call',
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrenotaPage() {
   return (
-    <div className="page page-tight">
+    <div className="page page-mid">
       <div className="page-head" style={{ marginBottom: 48 }}>
         <span className="eyebrow">Prenota la call</span>
         <h1 className="page-title serif" style={{ fontSize: 54 }}>
@@ -20,7 +21,7 @@ export default function PrenotaPage() {
         </p>
       </div>
 
-      <div className="two-col">
+      <div className="booking-layout">
         <div className="info-card">
           <span className="eyebrow-sm">Cosa aspettarti</span>
           <div className="info-list">
@@ -30,17 +31,8 @@ export default function PrenotaPage() {
             <div>◦ Esci con almeno una direzione chiara</div>
           </div>
         </div>
-        <div className="placeholder-card">
-          <div className="placeholder-mono">
-            [ calendario di prenotazione
-            <br />
-            Google Calendar / Calendly
-            <br />
-            da integrare qui ]
-          </div>
-          <span className="btn" style={{ marginTop: 20, cursor: 'default' }}>
-            Scegli un orario
-          </span>
+        <div className="booking-card">
+          <BookingWidget />
         </div>
       </div>
 
