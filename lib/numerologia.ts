@@ -34,7 +34,9 @@ function normalize(s: string): string {
 }
 
 // Riduzione teosofica a una cifra, preservando i numeri maestri 11/22/33.
-function reduce(n: number): number {
+// Esportata perché anche la Mappa dei Talenti (lib/mappaTalenti.ts) usa la STESSA
+// riduzione pitagorica: così i due calcolatori restano allineati.
+export function reduce(n: number): number {
   while (n > 9 && !MASTER.has(n)) {
     n = String(n)
       .split('')

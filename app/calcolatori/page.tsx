@@ -33,16 +33,16 @@ export default function CalcolatoriPage() {
           </Link>
         </div>
 
-        <div className="accent-card is-soon">
-          <span className="eyebrow-sm">In arrivo</span>
+        <div className="accent-card">
+          <span className="eyebrow-sm">Gratis + analisi completa</span>
           <h3 className="serif">Mappa dei Talenti</h3>
           <p>
-            Dalla tua data di nascita, i numeri che custodiscono i tuoi talenti e la tua direzione,
-            con la possibilità di sbloccare l’analisi completa.
+            Dalla tua data di nascita, i 6 numeri che custodiscono i tuoi talenti e la tua
+            direzione. Gratis subito; l’analisi completa con PDF e lettura dal vivo a 88€.
           </p>
-          <span className="link-underline" style={{ opacity: 0.55, cursor: 'default' }}>
-            Presto disponibile
-          </span>
+          <Link className="btn" href="/calcolatori/mappa-dei-talenti">
+            Scopri la tua mappa
+          </Link>
         </div>
       </div>
     </div>
