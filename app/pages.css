@@ -285,6 +285,13 @@
 .ankala-audience { margin-top: 34px; border-top: 1px solid var(--border-line); padding-top: 26px; }
 .ankala-sub-inline { display: block; font-weight: 500; font-size: 22px; color: var(--ink); margin-bottom: 10px; }
 
+.ankala-figure { display: flex; justify-content: center; margin-top: 34px; }
+.ankala-figure-img {
+  width: 320px; max-width: 100%; aspect-ratio: 720 / 1280; border-radius: 16px;
+  border: 1px solid rgba(156,107,34,.22); box-shadow: var(--shadow-card);
+  background: #EDE4CE url('/assets/ankala-quantum.jpg') center / cover no-repeat;
+}
+
 .ankala-treatments-head {
   margin-top: 36px; margin-bottom: 18px; text-align: center;
   font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--accent);

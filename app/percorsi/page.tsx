@@ -167,6 +167,14 @@ export default function PercorsiPage() {
           </p>
         </div>
 
+        <div className="ankala-figure">
+          <div
+            className="ankala-figure-img"
+            role="img"
+            aria-label="La tavola Ankàla Quantum Therapy con i 33 portali e la simbologia sacra"
+          />
+        </div>
+
         <div className="ankala-treatments-head">Trattamenti disponibili</div>
         <div className="ankala-grid">
           {ankalaTreatments.map((a) => (
