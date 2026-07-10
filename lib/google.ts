@@ -86,13 +86,18 @@ export async function createBookingEvent(details: BookingDetails) {
   const start = new Date(details.startUtcIso);
   const end = new Date(start.getTime() + durationMin(details.type) * 60000);
 
-  const isCall = details.type === 'call';
-  const summary = isCall
-    ? `Call conoscitiva (gratuita) · ${details.clientName}`
-    : `Sessione · ${details.clientName}`;
-  const intro = isCall
-    ? 'Call conoscitiva gratuita prenotata dal sito Origine in Movimento.'
-    : 'Sessione prenotata dal sito Origine in Movimento.';
+  const SUMMARY: Record<typeof details.type, string> = {
+    call: `Call conoscitiva (gratuita) · ${details.clientName}`,
+    session: `Sessione · ${details.clientName}`,
+    mappa: `Lettura Mappa dei Talenti · ${details.clientName}`,
+  };
+  const INTRO: Record<typeof details.type, string> = {
+    call: 'Call conoscitiva gratuita prenotata dal sito Origine in Movimento.',
+    session: 'Sessione prenotata dal sito Origine in Movimento.',
+    mappa: 'Lettura dal vivo della Mappa dei Talenti (pacchetto premium 88€) prenotata dal sito Origine in Movimento.',
+  };
+  const summary = SUMMARY[details.type];
+  const intro = INTRO[details.type];
 
   const descriptionLines = [
     intro,

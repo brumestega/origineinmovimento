@@ -5,17 +5,21 @@
 //                lunedì 7:00–11:00, più mer/ven pomeriggio 17:00–22:00. Il mer/ven mattina
 //                la fascia 7:00–10:00 è riservata alle call, quindi le sessioni partono
 //                dalle 10:00 (resta solo 10:00–11:00).
+//  - 'mappa'   → Lettura Mappa dei Talenti dal vivo, 1 ora. Inclusa nel pacchetto premium (88€):
+//                si raggiunge solo dopo l'acquisto (deep-link /prenota?tipo=mappa), NON è tra le
+//                opzioni self-service pubbliche. Stessa disponibilità delle sessioni.
 //
 // Modificare qui per cambiare giorni/orari/durate.
 // (Le sessioni in presenza NON usano questa logica: si concordano via WhatsApp/email.)
 
 import { romeWallTimeToUtc, partsInRome } from './timezone';
 
-export type BookingType = 'call' | 'session';
+export type BookingType = 'call' | 'session' | 'mappa';
 
 export const DURATION_MIN: Record<BookingType, number> = {
   call: 30,
   session: 60,
+  mappa: 60,
 };
 
 // Durata (minuti) di una prenotazione in base al tipo.
@@ -26,23 +30,27 @@ export function durationMin(type: BookingType): number {
 // getDay(): 0=domenica … 6=sabato
 type WeeklyWindow = { weekday: number; start: string; end: string };
 
+// Le sessioni e la Lettura Mappa dei Talenti condividono la stessa disponibilità (1 ora).
+const SESSION_WINDOWS: WeeklyWindow[] = [
+  // Mattine (tranne lunedì) 7:00–11:00 — mer/ven ridotte a 10:00–11:00 (7–10 = call)
+  { weekday: 2, start: '07:00', end: '11:00' }, // Martedì
+  { weekday: 3, start: '10:00', end: '11:00' }, // Mercoledì
+  { weekday: 4, start: '07:00', end: '11:00' }, // Giovedì
+  { weekday: 5, start: '10:00', end: '11:00' }, // Venerdì
+  { weekday: 6, start: '07:00', end: '11:00' }, // Sabato
+  { weekday: 0, start: '07:00', end: '11:00' }, // Domenica
+  // Pomeriggi mer/ven 17:00–22:00
+  { weekday: 3, start: '17:00', end: '22:00' }, // Mercoledì
+  { weekday: 5, start: '17:00', end: '22:00' }, // Venerdì
+];
+
 const WINDOWS: Record<BookingType, WeeklyWindow[]> = {
   call: [
     { weekday: 3, start: '07:00', end: '10:00' }, // Mercoledì
     { weekday: 5, start: '07:00', end: '10:00' }, // Venerdì
   ],
-  session: [
-    // Mattine (tranne lunedì) 7:00–11:00 — mer/ven ridotte a 10:00–11:00 (7–10 = call)
-    { weekday: 2, start: '07:00', end: '11:00' }, // Martedì
-    { weekday: 3, start: '10:00', end: '11:00' }, // Mercoledì
-    { weekday: 4, start: '07:00', end: '11:00' }, // Giovedì
-    { weekday: 5, start: '10:00', end: '11:00' }, // Venerdì
-    { weekday: 6, start: '07:00', end: '11:00' }, // Sabato
-    { weekday: 0, start: '07:00', end: '11:00' }, // Domenica
-    // Pomeriggi mer/ven 17:00–22:00
-    { weekday: 3, start: '17:00', end: '22:00' }, // Mercoledì
-    { weekday: 5, start: '17:00', end: '22:00' }, // Venerdì
-  ],
+  session: SESSION_WINDOWS,
+  mappa: SESSION_WINDOWS,
 };
 
 // Quanti giorni in avanti si può prenotare, e il preavviso minimo.
@@ -62,7 +70,7 @@ export type Slot = {
 };
 
 export function isBookingType(v: unknown): v is BookingType {
-  return v === 'call' || v === 'session';
+  return v === 'call' || v === 'session' || v === 'mappa';
 }
 
 // Genera gli slot candidati per una data "YYYY-MM-DD" e un tipo, in base alle fasce

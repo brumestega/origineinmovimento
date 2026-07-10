@@ -47,7 +47,7 @@ public/assets/      hero-meduse.jpg, chi-sono.jpg
 
 - **Fase 1 — Fondamenta**: setup Next.js, token, Home ✅
 - **Fase 2 — Contenuti**: Chi sono, Il Metodo, Percorsi ✅
-- **Fase 3 — Funzionalità**: prenotazioni + Google Calendar + questionario, form contatti ✅ · calcolatore "Vibrazione Nome e Cognome" ✅ · Mappa dei Talenti — da fare
+- **Fase 3 — Funzionalità**: prenotazioni + Google Calendar + questionario, form contatti ✅ · calcolatore "Vibrazione Nome e Cognome" ✅ · Mappa dei Talenti ✅
 - **Fase 4 — Rifinitura**: eventi, blog, testimonianze reali, link WhatsApp definitivo, deploy — da fare
 
 ## Prenotazioni, questionario e form contatti (Fase 3a)
@@ -68,14 +68,18 @@ slot generati nel fuso `Europe/Rome` gestito senza dipendenze in `lib/timezone.t
 |---|---|---|
 | Call conoscitiva (gratuita) | 30′ | Mercoledì e venerdì 7:00–10:00 |
 | Sessione | 1 ora | Mattine tutti i giorni tranne il lunedì 7:00–11:00 (mer/ven solo 10:00–11:00, perché 7:00–10:00 è riservato alle call) + mer/ven pomeriggio 17:00–22:00 |
+| Lettura Mappa dei Talenti | 1 ora | Stessa disponibilità della Sessione. **Non** self-service: si raggiunge solo dopo l'acquisto della Mappa completa, via deep-link `/prenota?tipo=mappa` |
 
 ### API interne (route handler, runtime Node)
 
-- `GET /api/booking/slots?date=YYYY-MM-DD&type=call|session` — slot liberi del giorno per il
+- `GET /api/booking/slots?date=YYYY-MM-DD&type=call|session|mappa` — slot liberi del giorno per il
   tipo richiesto (filtra il free/busy di Google Calendar se configurato).
 - `POST /api/booking` — valida tipo e questionario, ricontrolla lo slot e crea l'evento su
   Google Calendar (durata e titolo in base al tipo) con inviti + promemoria email a cliente e titolare.
 - `POST /api/contact` — invia il messaggio del form contatti via Resend.
+- `POST /api/mappa/lead` — livello gratuito della Mappa: registra il lead e restituisce i 6 numeri.
+- `POST /api/mappa/checkout` — crea la sessione Stripe Checkout per la Mappa completa (88€).
+- `GET /api/mappa/verify?session_id=…` — verifica il pagamento e ricalcola la Mappa completa.
 
 Tutte degradano con grazia: senza credenziali configurate rispondono con un messaggio che
 rimanda a email/telefono, senza mai andare in errore.
@@ -99,7 +103,7 @@ email + opt-in newsletter → risultato a schermo — con CTA finale "Vuoi appro
 che apre WhatsApp con messaggio precompilato. **Nessun pagamento sul sito**:
 l'approfondimento (Scheda Premium 88€) lo genera Silvia con il suo tool privato dopo
 il contatto WhatsApp. La pagina `app/calcolatori` è ora un hub con le due card
-(Vibrazione attiva, Mappa dei Talenti in arrivo).
+(entrambe attive: Vibrazione e Mappa dei Talenti).
 
 - **Logica di calcolo**: `lib/numerologia.ts` — sistema **pitagorico**, riduzione
   teosofica con numeri maestri (11/22/33), tre numeri (Espressione, Anima, Personalità).
@@ -109,6 +113,31 @@ il contatto WhatsApp. La pagina `app/calcolatori` è ora un hub con le due card
 - **API**: `POST /api/lead` registra il lead (email + newsletter) notificando Silvia via
   Resend e restituisce il risultato calcolato lato server. Il risultato viene mostrato
   anche se l'email non è configurata (il regalo non dipende dall'invio); honeypot anti-spam.
+
+## Calcolatore "Mappa dei Talenti" (Fase 3c)
+
+Il secondo calcolatore (`app/calcolatori/mappa-dei-talenti`, componente
+`components/MappaTalentiCalculator.tsx`): parte dalla **data di nascita**. Flusso — data →
+gate nome/email + newsletter → **6 numeri principali gratuiti** a schermo → sblocco
+**self-service SUL SITO** dell'analisi completa (88€) → al ritorno da Stripe, Mappa completa
++ **PDF decorativo** scaricabile + CTA per prenotare la **lettura dal vivo (60 min)**.
+
+- **Logica di calcolo**: `lib/mappaTalenti.ts` — **ricostruita dalla numerologia pitagorica
+  standard** (i sorgenti del calcolatore originale `talents-map` non erano disponibili), con la
+  **stessa riduzione** e la **stessa tabella di significati** di `lib/numerologia.ts` (che ora
+  esporta `reduce`). I 6 numeri (Desiderio, Risposta, Memoria, Conflitto di Base, Equilibrio,
+  Numero del Destino) formano una "croce" numerologica; il livello a pagamento aggiunge 4 Ambiti,
+  Personalità Profonda, Elementi Chiave (analisi di ricorrenza), Giustificazioni (narrativa) e
+  Super Sequenza (piramide di riduzione). Il modulo è **isolato**: per allinearlo al metodo esatto
+  di Silvia basta modificare le formule lì, senza toccare la UI.
+- **PDF**: `lib/pdfMappa.ts` — `jsPDF` (import dinamico lato client), stile "grimorio/tarocco"
+  con cornice dorata, rombi e fregi. Generato **solo** dopo lo sblocco a pagamento.
+- **Pagamento**: `lib/payment.ts` — Stripe Checkout via API REST (nessuna dipendenza npm). La
+  data di nascita viaggia nei metadata della sessione: al ritorno la Mappa viene **ricalcolata
+  lato server** (`/api/mappa/verify`), senza database. Se Stripe non è configurato, lo sblocco
+  degrada su WhatsApp. Config: `STRIPE_SECRET_KEY`, `MAPPA_PRICE_EUR`, `NEXT_PUBLIC_SITE_URL`.
+- **Booking**: l'acquisto include l'ora di lettura dal vivo — nuovo tipo `mappa` (60 min) in
+  `lib/availability.ts`, raggiungibile solo via `/prenota?tipo=mappa` dopo il pagamento.
 
 I file `*.md` alla radice e `Origine in movimento design.zip` sono i documenti di
 brief/design e restano nel repo come riferimento.

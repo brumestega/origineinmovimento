@@ -62,6 +62,91 @@ export async function sendContactEmail(input: {
   }
 }
 
+// Notifica a Silvia di un nuovo lead dal teaser gratuito della Mappa dei Talenti:
+// nominativo, email, consenso newsletter e data di nascita (per un eventuale follow-up).
+export async function sendMappaLeadEmail(input: {
+  nome: string;
+  email: string;
+  newsletter: boolean;
+  giorno: number;
+  mese: number;
+  anno: number;
+}): Promise<void> {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const { nome, email, newsletter, giorno, mese, anno } = input;
+  const dataStr = `${String(giorno).padStart(2, '0')}/${String(mese).padStart(2, '0')}/${anno}`;
+
+  const { error } = await resend.emails.send({
+    from: fromEmail(),
+    to: toEmail(),
+    replyTo: email,
+    subject: `Nuovo lead · Mappa dei Talenti (teaser) · ${nome}`,
+    text:
+      `Nuovo lead dal teaser gratuito della Mappa dei Talenti.\n\n` +
+      `Nome: ${nome}\nEmail: ${email}\nData di nascita: ${dataStr}\n` +
+      `Newsletter: ${newsletter ? 'sì' : 'no'}`,
+    html: `
+      <div style="font-family:system-ui,sans-serif;line-height:1.6;color:#241D3D">
+        <h2 style="font-family:Georgia,serif;color:#7A1B3D">Nuovo lead · Mappa dei Talenti (teaser)</h2>
+        <p><strong>Nome:</strong> ${escapeHtml(nome)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p><strong>Data di nascita:</strong> ${escapeHtml(dataStr)}</p>
+        <p><strong>Newsletter:</strong> ${newsletter ? 'sì' : 'no'}</p>
+      </div>`,
+  });
+
+  if (error) {
+    throw new Error(typeof error === 'string' ? error : error.message || 'Invio email fallito');
+  }
+}
+
+// Notifica a Silvia di un acquisto della Mappa dei Talenti completa (88€): nominativo, email,
+// data di nascita e i 6 numeri principali. Serve a preparare la lettura dal vivo da 60 minuti.
+export async function sendMappaAcquistoEmail(input: {
+  nome: string;
+  email: string;
+  giorno: number;
+  mese: number;
+  anno: number;
+  numeri: { etichetta: string; valore: number }[];
+}): Promise<void> {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const { nome, email, giorno, mese, anno, numeri } = input;
+  const dataStr = `${String(giorno).padStart(2, '0')}/${String(mese).padStart(2, '0')}/${anno}`;
+  const numeriTxt = numeri.map((n) => `${n.etichetta}: ${n.valore}`).join('\n');
+  const numeriHtml = numeri
+    .map((n) => `<li><strong>${escapeHtml(n.etichetta)}:</strong> ${n.valore}</li>`)
+    .join('');
+
+  const { error } = await resend.emails.send({
+    from: fromEmail(),
+    to: toEmail(),
+    replyTo: email,
+    subject: `Acquisto · Mappa dei Talenti completa · ${nome}`,
+    text:
+      `Nuovo acquisto della Mappa dei Talenti completa (88€).\n\n` +
+      `Nome: ${nome}\nEmail: ${email}\nData di nascita: ${dataStr}\n\n` +
+      `Numeri principali:\n${numeriTxt}\n\n` +
+      `Ricorda: il pacchetto include 1 ora di lettura dal vivo. ` +
+      `L'utente è stato invitato a prenotare la "Lettura Mappa dei Talenti" (60 min).`,
+    html: `
+      <div style="font-family:system-ui,sans-serif;line-height:1.6;color:#241D3D">
+        <h2 style="font-family:Georgia,serif;color:#7A1B3D">Acquisto · Mappa dei Talenti completa</h2>
+        <p><strong>Nome:</strong> ${escapeHtml(nome)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p><strong>Data di nascita:</strong> ${escapeHtml(dataStr)}</p>
+        <p><strong>Numeri principali:</strong></p>
+        <ul>${numeriHtml}</ul>
+        <p style="color:#5C5570">Il pacchetto include 1 ora di lettura dal vivo: l'utente è stato
+        invitato a prenotare la <em>Lettura Mappa dei Talenti</em> (60 min).</p>
+      </div>`,
+  });
+
+  if (error) {
+    throw new Error(typeof error === 'string' ? error : error.message || 'Invio email fallito');
+  }
+}
+
 // Notifica a Silvia di un nuovo lead dal calcolatore "Vibrazione Nome e Cognome":
 // nominativo, email, consenso newsletter e i numeri calcolati.
 export async function sendVibrazioneLeadEmail(input: {

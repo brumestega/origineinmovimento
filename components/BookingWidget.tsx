@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-export type BookingType = 'call' | 'session';
+export type BookingType = 'call' | 'session' | 'mappa';
 
 // Giorni prenotabili (0=dom … 6=sab) per tipo — coerente con lib/availability.ts.
 const WEEKDAYS_BY_TYPE: Record<BookingType, number[]> = {
   call: [3, 5], // mercoledì e venerdì
   session: [0, 2, 3, 4, 5, 6], // tutti tranne lunedì
+  mappa: [0, 2, 3, 4, 5, 6], // come le sessioni
 };
 
 const TYPE_META: Record<
@@ -27,6 +28,13 @@ const TYPE_META: Record<
     free: false,
     hint: 'Mattine tutti i giorni tranne il lunedì; pomeriggi il mercoledì e il venerdì.',
     confirmNoun: 'la nostra sessione',
+  },
+  mappa: {
+    label: 'Lettura Mappa dei Talenti',
+    duration: '1 ora',
+    free: false,
+    hint: 'Mattine tutti i giorni tranne il lunedì; pomeriggi il mercoledì e il venerdì.',
+    confirmNoun: 'la tua lettura della Mappa dei Talenti',
   },
 };
 
@@ -98,6 +106,20 @@ export default function BookingWidget({ onStateChange }: Props) {
   useEffect(() => {
     onStateChange?.({ bookingType, step });
   }, [bookingType, step, onStateChange]);
+
+  // Deep-link dalla Mappa dei Talenti: dopo l'acquisto l'utente arriva su /prenota?tipo=mappa
+  // e salta dritto al calendario per la "Lettura Mappa dei Talenti" (60 min). Non è tra le
+  // opzioni pubbliche del selettore: si raggiunge solo così.
+  useEffect(() => {
+    const tipo = new URLSearchParams(window.location.search).get('tipo');
+    if (tipo === 'mappa') {
+      setBookingType('mappa');
+      setViewYear(today.getFullYear());
+      setViewMonth(today.getMonth());
+      setStep('date');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Griglia del mese in visualizzazione (giorni selezionabili in base al tipo scelto).
   const grid = useMemo(() => {
