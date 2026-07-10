@@ -107,13 +107,13 @@ export default function BookingWidget({ onStateChange }: Props) {
     onStateChange?.({ bookingType, step });
   }, [bookingType, step, onStateChange]);
 
-  // Deep-link dalla Mappa dei Talenti: dopo l'acquisto l'utente arriva su /prenota?tipo=mappa
-  // e salta dritto al calendario per la "Lettura Mappa dei Talenti" (60 min). Non è tra le
-  // opzioni pubbliche del selettore: si raggiunge solo così.
+  // Deep-link verso il calendario saltando la scelta del tipo:
+  //  · /prenota?tipo=mappa   → "Lettura Mappa dei Talenti" (dopo l'acquisto della Mappa)
+  //  · /prenota?tipo=session → "Sessione" (es. dalla scheda Trattamenti Ankàla)
   useEffect(() => {
     const tipo = new URLSearchParams(window.location.search).get('tipo');
-    if (tipo === 'mappa') {
-      setBookingType('mappa');
+    if (tipo === 'mappa' || tipo === 'session') {
+      setBookingType(tipo);
       setViewYear(today.getFullYear());
       setViewMonth(today.getMonth());
       setStep('date');

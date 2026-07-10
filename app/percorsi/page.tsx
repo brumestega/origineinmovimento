@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 // Elenco servizi definitivo (fase-2 / prompt-servizi-aggiornati).
 // La modalità è indicata su ogni scheda perché cambia cosa una persona
 // può prenotare in base a dove vive.
+// I Trattamenti Ankàla hanno una scheda estesa dedicata (sotto la griglia).
 const services = [
   {
     n: '01',
@@ -21,14 +22,6 @@ const services = [
   },
   {
     n: '02',
-    title: 'Trattamenti Ankàla',
-    body: 'Un trattamento energetico per sciogliere le tensioni e ritrovare equilibrio. Consigliate 3 sedute iniziali.',
-    modality: 'Online e in presenza',
-    badge: 'badge-online',
-    price: '88€ a seduta',
-  },
-  {
-    n: '03',
     title: 'Registri Akashici',
     body: "Un accesso alla memoria profonda dell'anima, per fare chiarezza su pattern e vissuti.",
     modality: 'Online e in presenza',
@@ -36,7 +29,7 @@ const services = [
     price: '88€',
   },
   {
-    n: '04',
+    n: '03',
     title: 'Armonizzazione',
     body: 'Un riequilibrio energetico dolce per corpo e spazio interiore.',
     modality: 'Online e in presenza',
@@ -44,7 +37,7 @@ const services = [
     price: '88€',
   },
   {
-    n: '05',
+    n: '04',
     title: 'Trattamento sonoro',
     body: 'Frequenze e vibrazioni per sciogliere le tensioni in profondità.',
     modality: 'Solo in presenza',
@@ -52,13 +45,25 @@ const services = [
     price: '88€',
   },
   {
-    n: '06',
+    n: '05',
     title: 'Rilevamento di geopatia in casa',
     body: "Un sopralluogo fisico per individuare e sciogliere le interferenze energetiche nei tuoi spazi di vita.",
     modality: 'Solo a domicilio',
     badge: 'badge-domicilio',
     price: '180€',
   },
+];
+
+// Protocolli Ankàla mostrati nella scheda estesa (griglia di card piccole).
+const ankalaTreatments = [
+  { t: 'Riconnessione bambino interiore', d: 'Riconnessione con la tua essenza originaria e trasformazione ferite emotive.' },
+  { t: 'Trasformazione emozionale', d: 'Identificazione e trasformazione di pattern comportamentali ripetitivi.' },
+  { t: 'Liberazione antenati', d: 'Liberazione da schemi transgenerazionali ereditati da entrambi i lati.' },
+  { t: 'Attivazione magnetismo', d: 'Risveglio del potere di attrazione e manifestazione personale.' },
+  { t: 'Purificazione aura', d: "Pulizia dell'energia toroidale e del campo aurico." },
+  { t: 'Pulizia e riattivazione chakra', d: 'Armonizzazione completa dei centri energetici principali.' },
+  { t: 'Armonizzazione intuitiva', d: "Lavoro guidato dall'intuizione sulle aree che necessitano attenzione." },
+  { t: 'Sblocco nodi energetici', d: 'Liberazione da lavori di stregoneria e scioglimento vincoli.' },
 ];
 
 const phases = [
@@ -103,6 +108,80 @@ export default function PercorsiPage() {
               </Link>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* TRATTAMENTI ANKÀLA — scheda estesa dedicata */}
+      <section className="ankala" aria-labelledby="ankala-title">
+        <div className="ankala-top">
+          {/* Foto seduta: sfondo con fallback a pattern oro se il file non è ancora presente */}
+          <div
+            className="ankala-media"
+            role="img"
+            aria-label="Una seduta Ankàla: cristalli sulla tavola dell'Albero della Vita"
+          />
+          <div className="ankala-intro">
+            <div className="serv-head-label">Trattamento energetico</div>
+            <h2 id="ankala-title" className="ankala-title serif">
+              Trattamenti Ankàla
+            </h2>
+            <div className="serv-meta" style={{ marginBottom: 20 }}>
+              <span className="badge badge-online">Online e in presenza</span>
+              <span className="serv-price serif">88€ a seduta</span>
+            </div>
+            <h3 className="ankala-sub serif">Cos&apos;è Ankàla</h3>
+            <p className="ankala-p">
+              Ankàla è un&apos;esclusiva tecnica di guarigione e trasmissione energetica che utilizza
+              33 portali con simbologia sacra dell&apos;acqua cosmica di Lira. «Ankàla» significa
+              proprio «acqua» nel linguaggio lirano.
+            </p>
+            <p className="ankala-p">
+              Questa potente pratica serve ad attivare le virtù più elevate dell&apos;essere, portando
+              un profondo riequilibrio emozionale, energetico, fisico ed eterico.
+            </p>
+            <p className="ankala-p">
+              Durante la seduta si lavora sul campo energetico della persona, trasformando vibrazioni
+              dissonanti in vibrazioni armoniche attraverso un lavoro profondo sulle memorie cellulari
+              e dell&apos;anima.
+            </p>
+            <div className="ankala-facts">
+              <div className="ankala-fact">
+                <span className="ankala-fact-h">Durata</span>60 minuti
+              </div>
+              <div className="ankala-fact">
+                <span className="ankala-fact-h">Modalità</span>Online e presenza
+              </div>
+              <div className="ankala-fact">
+                <span className="ankala-fact-h">Consiglio</span>3 sedute iniziali
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="ankala-audience">
+          <span className="ankala-sub-inline serif">A chi si rivolge</span>
+          <p className="ankala-p" style={{ margin: 0 }}>
+            A chi vuole uscire da vecchi schemi, riabilitare l&apos;equilibrio interiore, attivare la
+            propria fiamma interiore, trasformare l&apos;acqua del proprio corpo in luce e liberarsi
+            di Eggregore limitanti.
+          </p>
+        </div>
+
+        <div className="ankala-treatments-head">Trattamenti disponibili</div>
+        <div className="ankala-grid">
+          {ankalaTreatments.map((a) => (
+            <div className="ankala-card" key={a.t}>
+              <div className="ankala-card-t serif">{a.t}</div>
+              <p className="ankala-card-d">{a.d}</p>
+            </div>
+          ))}
+        </div>
+        <p className="ankala-note">Questi sono alcuni protocolli, ma ve ne sono molti altri.</p>
+
+        <div style={{ textAlign: 'center', marginTop: 30 }}>
+          <Link className="btn" href="/prenota?tipo=session">
+            Prenota un Trattamento
+          </Link>
         </div>
       </section>
 
