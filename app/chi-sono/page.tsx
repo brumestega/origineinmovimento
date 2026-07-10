@@ -72,6 +72,14 @@ const formazione = [
   },
 ];
 
+// Discipline integrate nel lavoro di oggi — parte del racconto narrativo "Il mio percorso".
+const disciplineIntegrate = [
+  { t: 'Ankàla', d: 'Riequilibrio energetico quantico, tecnologia per le memorie cellulari' },
+  { t: 'Numerologia Evolutiva', d: 'Mappa dei Talenti e archetipi' },
+  { t: 'Cromopsicologia', d: 'Psicologia del colore e vibrazioni' },
+  { t: 'Spiritual Quantum Coaching', d: 'Accompagnamento spirituale e quantico' },
+];
+
 export default function ChiSonoPage() {
   return (
     <div className="page">
@@ -120,6 +128,45 @@ export default function ChiSonoPage() {
             Iniziamo con una consulenza gratuita di 30 minuti per conoscerci e delineare insieme il
             percorso più adatto a te.
           </p>
+
+          <div className="chisono-block">
+            <span className="eyebrow-sm">Il mio percorso</span>
+            <h2 className="chisono-sub serif" style={{ margin: '4px 0 12px' }}>
+              Da dove parto
+            </h2>
+            <p className="chisono-p">
+              Il mio viaggio è iniziato con lo studio della connessione mente-corpo e la decodifica
+              del sintomo: comprendere come il corpo parli attraverso i segnali fisici, rivelando
+              disagi emotivi e blocchi energetici non risolti.
+            </p>
+            <p className="chisono-p">
+              Questo mi ha portato naturalmente alla metagenealogia, lo studio degli schemi familiari
+              e delle eredità transgenerazionali. Ho scoperto come le memorie dei nostri antenati
+              influenzino profondamente le nostre vite, creando pattern ripetitivi che possiamo
+              finalmente riconoscere e trasformare.
+            </p>
+            <p className="chisono-p">
+              Da queste basi solide, ho integrato diverse tecniche e discipline che arricchiscono il
+              mio lavoro oggi:
+            </p>
+            <ul className="formazione-list">
+              {disciplineIntegrate.map((d) => (
+                <li className="formazione-item" key={d.t}>
+                  <span className="formazione-t">{d.t}</span>
+                  <span className="formazione-d">{d.d}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="chisono-p" style={{ marginTop: 20 }}>
+              Il mio percorso include anche studi in Reiki e nel simbolismo dei tarocchi, che hanno
+              arricchito la mia sensibilità energetica e intuitiva nel tempo.
+            </p>
+            <p className="chisono-p">
+              Ogni strumento che ho appreso è un tassello di un mosaico più ampio: aiutarti a
+              ritrovare il tuo stato originario, quella centratura autentica da cui puoi vivere
+              pienamente la tua vita.
+            </p>
+          </div>
 
           <div className="chisono-block">
             <span className="eyebrow-sm">Formazione</span>
