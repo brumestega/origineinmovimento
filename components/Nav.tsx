@@ -11,6 +11,7 @@ const navItems = [
   { label: 'Percorsi', href: '/percorsi' },
   { label: 'Eventi', href: '/eventi' },
   { label: 'Blog', href: '/blog' },
+  { label: 'FAQ', href: '/faq' },
 ];
 
 export default function Nav() {
