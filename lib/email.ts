@@ -61,3 +61,44 @@ export async function sendContactEmail(input: {
     throw new Error(typeof error === 'string' ? error : error.message || 'Invio email fallito');
   }
 }
+
+// Notifica a Silvia di un nuovo lead dal calcolatore "Vibrazione Nome e Cognome":
+// nominativo, email, consenso newsletter e i numeri calcolati.
+export async function sendVibrazioneLeadEmail(input: {
+  nome: string;
+  cognome: string;
+  email: string;
+  newsletter: boolean;
+  espressione: number;
+  anima: number;
+  personalita: number;
+}): Promise<void> {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const { nome, cognome, email, newsletter, espressione, anima, personalita } = input;
+
+  const { error } = await resend.emails.send({
+    from: fromEmail(),
+    to: toEmail(),
+    replyTo: email,
+    subject: `Nuovo lead · Vibrazione Nome e Cognome · ${nome} ${cognome}`,
+    text:
+      `Nuovo lead dal calcolatore "Vibrazione Nome e Cognome".\n\n` +
+      `Nome: ${nome} ${cognome}\nEmail: ${email}\n` +
+      `Newsletter: ${newsletter ? 'sì' : 'no'}\n\n` +
+      `Espressione: ${espressione}\nAnima: ${anima}\nPersonalità: ${personalita}`,
+    html: `
+      <div style="font-family:system-ui,sans-serif;line-height:1.6;color:#241D3D">
+        <h2 style="font-family:Georgia,serif;color:#7A1B3D">Nuovo lead · Vibrazione Nome e Cognome</h2>
+        <p><strong>Nome:</strong> ${escapeHtml(`${nome} ${cognome}`)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p><strong>Newsletter:</strong> ${newsletter ? 'sì' : 'no'}</p>
+        <p><strong>Espressione:</strong> ${espressione} ·
+           <strong>Anima:</strong> ${anima} ·
+           <strong>Personalità:</strong> ${personalita}</p>
+      </div>`,
+  });
+
+  if (error) {
+    throw new Error(typeof error === 'string' ? error : error.message || 'Invio email fallito');
+  }
+}

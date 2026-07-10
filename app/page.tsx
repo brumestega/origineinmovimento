@@ -110,7 +110,7 @@ export default function HomePage() {
             <span className="eyebrow-sm">Strumento gratuito</span>
             <h3 className="serif">Frequenza di Nome e Cognome</h3>
             <p>La vibrazione racchiusa nel tuo nome, e cosa racconta della tua energia.</p>
-            <Link className="link-underline" href="/calcolatori">
+            <Link className="link-underline" href="/calcolatori/vibrazione-nome-cognome">
               Scopri la tua frequenza →
             </Link>
           </div>
