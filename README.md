@@ -53,21 +53,28 @@ public/assets/      hero-meduse.jpg, chi-sono.jpg
 ## Prenotazioni, questionario e form contatti (Fase 3a)
 
 Pagina **Prenota la call** (`app/prenota`, componente `components/BookingWidget.tsx`):
-flusso a 3 passaggi — calendario → orario → questionario breve — con conferma a schermo.
-Il questionario (nome, email, telefono, contatto preferito, motivo) è **l'ultimo passaggio
-prima di confermare**, non un'email separata: i suoi dati finiscono nella descrizione
-dell'evento Google Calendar.
+il primo passo è la **modalità** — *Online* (self-service) o *In presenza* (giorni concordati
+caso per caso, con invito a scrivere via WhatsApp/email, nessuno slot automatico).
 
-Disponibilità in `lib/availability.ts` (Martedì 15:30–19:00, Sabato 9:00–12:30, slot da 30′;
-modificare lì per cambiare giorni/orari). Fuso `Europe/Rome` gestito senza dipendenze in
-`lib/timezone.ts`.
+Nel percorso **Online** si sceglie poi il **tipo** di prenotazione, quindi calendario → orario
+→ questionario breve → conferma a schermo. Il questionario (nome, email, telefono, contatto
+preferito, motivo) è **l'ultimo passaggio prima di confermare**, non un'email separata: i suoi
+dati finiscono nella descrizione dell'evento Google Calendar.
+
+Due tipi di prenotazione online, con disponibilità distinte (in `lib/availability.ts`,
+slot generati nel fuso `Europe/Rome` gestito senza dipendenze in `lib/timezone.ts`):
+
+| Tipo | Durata | Disponibilità |
+|---|---|---|
+| Call conoscitiva (gratuita) | 30′ | Mercoledì e venerdì 7:00–10:00 |
+| Sessione | 1 ora | Mattine tutti i giorni tranne il lunedì 7:00–11:00 (mer/ven solo 10:00–11:00, perché 7:00–10:00 è riservato alle call) + mer/ven pomeriggio 17:00–22:00 |
 
 ### API interne (route handler, runtime Node)
 
-- `GET /api/booking/slots?date=YYYY-MM-DD` — slot liberi del giorno (filtra il free/busy di
-  Google Calendar se configurato).
-- `POST /api/booking` — valida il questionario, ricontrolla lo slot e crea l'evento su Google
-  Calendar con inviti + promemoria email a cliente e titolare.
+- `GET /api/booking/slots?date=YYYY-MM-DD&type=call|session` — slot liberi del giorno per il
+  tipo richiesto (filtra il free/busy di Google Calendar se configurato).
+- `POST /api/booking` — valida tipo e questionario, ricontrolla lo slot e crea l'evento su
+  Google Calendar (durata e titolo in base al tipo) con inviti + promemoria email a cliente e titolare.
 - `POST /api/contact` — invia il messaggio del form contatti via Resend.
 
 Tutte degradano con grazia: senza credenziali configurate rispondono con un messaggio che

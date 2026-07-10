@@ -4,7 +4,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { isEmail, nonEmpty, clean } from '@/lib/validation';
-import { candidateSlotsForDate } from '@/lib/availability';
+import { candidateSlotsForDate, isBookingType, durationMin } from '@/lib/availability';
 import { romeDateKey } from '@/lib/timezone';
 import {
   isCalendarConfigured,
@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
+  const type = clean(body.type, 20);
   const startUtc = clean(body.startUtc, 40);
   const name = clean(body.name, 120);
   const email = clean(body.email, 160);
@@ -35,6 +36,9 @@ export async function POST(req: NextRequest) {
   const reason = clean(body.reason, 2000);
   const contactPreference = clean(body.contactPreference, 40);
 
+  if (!isBookingType(type)) {
+    return NextResponse.json({ error: 'Tipo di prenotazione non valido.' }, { status: 400 });
+  }
   if (!nonEmpty(name, 2)) {
     return NextResponse.json({ error: 'Inserisci il tuo nome.' }, { status: 400 });
   }
@@ -50,9 +54,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Orario non valido o già passato.' }, { status: 400 });
   }
 
-  // Lo slot richiesto deve corrispondere a uno slot valido della sua giornata.
+  // Lo slot richiesto deve corrispondere a uno slot valido della sua giornata e del suo tipo.
   const dayKey = romeDateKey(startDate);
-  const valid = candidateSlotsForDate(dayKey).some((s) => s.startUtc === startDate.toISOString());
+  const valid = candidateSlotsForDate(dayKey, type).some(
+    (s) => s.startUtc === startDate.toISOString(),
+  );
   if (!valid) {
     return NextResponse.json({ error: 'Questo orario non è disponibile.' }, { status: 409 });
   }
@@ -69,7 +75,7 @@ export async function POST(req: NextRequest) {
 
   try {
     // Ricontrollo free/busy per evitare doppie prenotazioni tra il caricamento e l'invio.
-    const free = await isSlotFree(startDate.toISOString());
+    const free = await isSlotFree(startDate.toISOString(), durationMin(type));
     if (!free) {
       return NextResponse.json(
         { error: 'Questo orario è appena stato prenotato. Scegline un altro.' },
@@ -78,6 +84,7 @@ export async function POST(req: NextRequest) {
     }
 
     const event = await createBookingEvent({
+      type,
       startUtcIso: startDate.toISOString(),
       clientName: name,
       clientEmail: email,
