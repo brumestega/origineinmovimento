@@ -34,15 +34,15 @@ export default function CalcolatoriPage() {
         </div>
 
         <div className="accent-card">
-          <span className="eyebrow-sm">Gratis + analisi completa</span>
+          <span className="eyebrow-sm">Strumento completo</span>
           <h3 className="serif">Mappa dei Talenti</h3>
           <p>
-            Dalla tua data di nascita, i 6 numeri che custodiscono i tuoi talenti e la tua
-            direzione. Gratis subito; l’analisi completa con PDF e lettura dal vivo a 88€.
+            Dalla tua data di nascita, la tua mappa numerologica completa: talenti, schemi familiari
+            e direzione di vita, con export in PDF. Si apre nell’applicazione dedicata.
           </p>
-          <Link className="btn" href="/calcolatori/mappa-dei-talenti">
-            Scopri la tua mappa
-          </Link>
+          <a className="btn" href="/calcolatore/index.html" target="_blank" rel="noopener">
+            Apri la Mappa dei Talenti
+          </a>
         </div>
       </div>
     </div>
