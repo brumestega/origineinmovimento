@@ -135,6 +135,21 @@
 .chisono-block .eyebrow-sm { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: block; }
 .list-plain { display: flex; flex-direction: column; gap: 12px; font-size: 14.5px; color: var(--body); font-weight: 300; line-height: 1.5; }
 
+/* Lista formazione — credenziali eleganti (percorso + ente/insegnante) */
+.formazione-list { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; }
+.formazione-item {
+  position: relative; padding: 15px 0 15px 24px;
+  border-top: 1px solid var(--border-soft);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.formazione-item:first-child { border-top: 0; }
+.formazione-item::before {
+  content: '✦'; position: absolute; left: 0; top: 16px;
+  font-family: 'Cormorant Garamond', serif; font-size: 13px; color: var(--accent); line-height: 1;
+}
+.formazione-t { font-size: 15px; color: var(--ink-soft); font-weight: 400; line-height: 1.5; }
+.formazione-d { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.55; }
+
 /* Laboratori ed esperienze (portfolio, nessuna CTA di prenotazione) */
 .lab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 22px; }
 .lab-card {

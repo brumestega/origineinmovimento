@@ -36,6 +36,42 @@ const laboratori = [
   },
 ];
 
+// Formazione reale di Silvia — lista credenziali (percorso, ente/insegnante, anno).
+const formazione = [
+  {
+    t: 'Reiki — I e II livello, Advanced Reiki Healing System',
+    d: 'Shiv Piel (Reiki Master), Dao-Daolit · 2015',
+  },
+  {
+    t: 'Pranic Healing Course',
+    d: 'Institute for Inner Studies · Master Choa Kok Sui',
+  },
+  {
+    t: 'Scuola del Sintomo — Daleth',
+    d: '«La logica della vita: biologia umana» e «Il senso del clan: un tranello insidioso o un tesoro inestimabile?» (128 ore ciascuno)',
+  },
+  {
+    t: 'Spiritual Quantum Emotions e Spiritual Quantum Coaching',
+    d: 'Embassy of Peace · Giovanni Vota',
+  },
+  {
+    t: 'Master di specializzazione in Cromopsicologia',
+    d: 'Unisaggezza · Samya Ilaria Di Donato',
+  },
+  {
+    t: 'Quantum Intuition',
+    d: 'Joy Martina PhD',
+  },
+  {
+    t: 'Lettore dei Registri Akashici Quantici — livello I e II',
+    d: 'Agartha · Andrea Bassi',
+  },
+  {
+    t: 'Operatore di Guarigione Quantica Ankàla — livello I, e Ankàla Multiverso livello II',
+    d: 'Agartha · Andrea Bassi',
+  },
+];
+
 export default function ChiSonoPage() {
   return (
     <div className="page">
@@ -87,11 +123,21 @@ export default function ChiSonoPage() {
 
           <div className="chisono-block">
             <span className="eyebrow-sm">Formazione</span>
-            <div className="list-plain">
-              <div>◦ Numerologia evolutiva — [ tua formazione ]</div>
-              <div>◦ Trattamenti Ankàla — [ tua formazione ]</div>
-              <div>◦ Rilevamento geopatico — [ tua formazione ]</div>
-            </div>
+            <h2 className="chisono-sub serif" style={{ margin: '4px 0 12px' }}>
+              La mia formazione
+            </h2>
+            <p className="chisono-p" style={{ marginBottom: 6 }}>
+              Il mio percorso di formazione è stato ampio e trasversale, perché ho voluto costruire un
+              metodo che unisse discipline diverse invece di fermarmi a una sola:
+            </p>
+            <ul className="formazione-list">
+              {formazione.map((f) => (
+                <li className="formazione-item" key={f.t}>
+                  <span className="formazione-t">{f.t}</span>
+                  <span className="formazione-d">{f.d}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
           <Link className="btn" href="/prenota" style={{ marginTop: 36 }}>
