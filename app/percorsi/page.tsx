@@ -193,6 +193,61 @@ export default function PercorsiPage() {
         </div>
       </section>
 
+      {/* STRUMENTI COMPLEMENTARI */}
+      <section className="tools" aria-labelledby="tools-title">
+        <div className="serv-head">
+          <div className="serv-head-label" id="tools-title">
+            Strumenti complementari
+          </div>
+        </div>
+        <div className="tools-card">
+          {/* Illustrazione: fallback a pattern oro finché /assets/sciogliere-credenze.jpg non è presente */}
+          <div
+            className="tools-media"
+            role="img"
+            aria-label="Illustrazione: una figura femminile che emerge da un fiore di loto, tra stelle e linee d'oro"
+          />
+          <div className="tools-body">
+            <h3 className="tools-title serif">Sciogliere le Credenze</h3>
+            <div className="serv-meta" style={{ marginBottom: 18 }}>
+              <span className="badge badge-online">Online e in presenza</span>
+              <span className="serv-price serif">88€</span>
+            </div>
+            <p className="ankala-p">
+              Molti dei blocchi che viviamo non sono nostri — sono credenze inconsce, spesso
+              ereditate o assorbite nel tempo, ed eggregore limitanti: strutture energetiche
+              condivise che ci trattengono in schemi di pensiero e comportamento non più nostri.
+              Questo accompagnamento lavora proprio lì, dove la mente razionale non arriva da sola.
+            </p>
+            <p className="ankala-p">
+              Attraverso un lavoro mirato sul subconscio, ti accompagno a riconoscere le credenze che
+              ti tengono bloccata, scioglierle, e liberarti da vincoli energetici che non ti
+              appartengono più — per fare spazio a una versione più libera e autentica di te.
+            </p>
+            <div className="ankala-facts">
+              <div className="ankala-fact">
+                <span className="ankala-fact-h">Durata</span>60 minuti
+              </div>
+              <div className="ankala-fact">
+                <span className="ankala-fact-h">Modalità</span>Online e presenza
+              </div>
+            </div>
+            <div className="tools-audience">
+              <span className="ankala-sub-inline serif">A chi si rivolge</span>
+              <p className="ankala-p" style={{ margin: 0 }}>
+                A chi sente di ripetere sempre gli stessi schemi, nonostante l&apos;impegno
+                consapevole — e vuole lavorare alla radice, non solo in superficie.
+              </p>
+            </div>
+            <div style={{ marginTop: 26 }}>
+              <Link className="btn" href="/prenota?tipo=session">
+                Prenota
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* PERCORSO PRINCIPALE — pacchetto unico, non scomponibile */}
       <section className="premium">
         <div className="premium-head">

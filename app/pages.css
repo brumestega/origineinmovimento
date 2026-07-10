@@ -313,6 +313,35 @@
   .ankala-grid { grid-template-columns: 1fr; }
 }
 
+/* ---------------- Strumenti complementari ---------------- */
+.tools { margin-top: 60px; }
+.tools-card {
+  display: grid; grid-template-columns: .9fr 1.1fr; gap: 36px; align-items: stretch;
+  border: 1px solid rgba(156,107,34,.28); border-radius: 20px;
+  padding: 34px; background: var(--card-accent); box-shadow: var(--shadow-card);
+}
+/* Illustrazione: fallback a pattern oro se il file manca (nessuna icona rotta) */
+.tools-media {
+  border-radius: 16px; min-height: 320px;
+  border: 1px solid rgba(156,107,34,.22);
+  background-color: #EDE4CE;
+  background-image:
+    url('/assets/sciogliere-credenze.jpg'),
+    repeating-linear-gradient(45deg, rgba(156,107,34,.14) 0, rgba(156,107,34,.14) 11px, transparent 11px, transparent 22px);
+  background-size: cover, auto;
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+}
+.tools-body { display: flex; flex-direction: column; }
+.tools-title { font-weight: 500; font-size: 30px; color: var(--ink); line-height: 1.1; margin-bottom: 14px; }
+.tools-audience { margin-top: 22px; border-top: 1px solid var(--border-line); padding-top: 20px; }
+
+@media (max-width: 820px) {
+  .tools-card { grid-template-columns: 1fr; gap: 22px; padding: 26px 22px; }
+  .tools-media { min-height: 240px; }
+  .tools-title { font-size: 26px; }
+}
+
 /* ---------------- Placeholder pages ("prossimamente") ---------------- */
 .soon { max-width: 720px; margin: 0 auto; padding: 110px 34px 120px; text-align: center; }
 .soon .eyebrow { display: block; margin-bottom: 16px; }
