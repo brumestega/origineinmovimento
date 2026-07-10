@@ -55,7 +55,7 @@ export default function Nav() {
             );
           })}
           <Link href="/prenota" className="oim-cta" onClick={() => setOpen(false)}>
-            Prenota la call
+            Prenota un incontro
           </Link>
         </nav>
       </div>
