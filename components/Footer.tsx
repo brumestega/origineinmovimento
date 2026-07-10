@@ -16,6 +16,7 @@ export default function Footer() {
             <Link href="/chi-sono">Chi sono</Link>
             <Link href="/metodo">Il Metodo</Link>
             <Link href="/percorsi">Percorsi</Link>
+            <Link href="/faq">Domande frequenti</Link>
             <Link href="/testimonianze">Testimonianze</Link>
             <Link href="/contatti">Contatti</Link>
           </div>
