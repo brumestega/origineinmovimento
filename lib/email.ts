@@ -147,6 +147,34 @@ export async function sendMappaAcquistoEmail(input: {
   }
 }
 
+// Notifica a Silvia di una nuova iscrizione alla lista d'attesa dei "Percorsi Collettivi"
+// (carte meditative con Benedetta Siri): solo email, in attesa dell'apertura iscrizioni.
+export async function sendCollettiviLeadEmail(input: { email: string }): Promise<void> {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const { email } = input;
+
+  const { error } = await resend.emails.send({
+    from: fromEmail(),
+    to: toEmail(),
+    replyTo: email,
+    subject: `Lista d'attesa · Percorsi Collettivi · ${email}`,
+    text:
+      `Nuova iscrizione alla lista d'attesa dei Percorsi Collettivi ` +
+      `(carte meditative con Benedetta Siri).\n\nEmail: ${email}`,
+    html: `
+      <div style="font-family:system-ui,sans-serif;line-height:1.6;color:#241D3D">
+        <h2 style="font-family:Georgia,serif;color:#7A1B3D">Lista d'attesa · Percorsi Collettivi</h2>
+        <p>Nuova iscrizione da avvisare all'apertura delle iscrizioni
+        (carte meditative con Benedetta Siri).</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+      </div>`,
+  });
+
+  if (error) {
+    throw new Error(typeof error === 'string' ? error : error.message || 'Invio email fallito');
+  }
+}
+
 // Notifica a Silvia di un nuovo lead dal calcolatore "Vibrazione Nome e Cognome":
 // nominativo, email, consenso newsletter e i numeri calcolati.
 export async function sendVibrazioneLeadEmail(input: {

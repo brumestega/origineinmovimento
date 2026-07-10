@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import CollettiviWaitlist from '@/components/CollettiviWaitlist';
 
 export const metadata: Metadata = {
   title: 'Percorsi',
@@ -275,6 +276,23 @@ export default function PercorsiPage() {
         <Link className="btn" href="/prenota">
           Prenota la call conoscitiva gratuita
         </Link>
+      </section>
+
+      {/* PERCORSI COLLETTIVI — teaser "in arrivo" con lista d'attesa */}
+      <section className="tools" aria-labelledby="collettivi-title">
+        <div className="newsletter">
+          <span className="premium-badge" style={{ marginBottom: 16 }}>
+            Percorsi collettivi · In arrivo
+          </span>
+          <h2 id="collettivi-title" className="serif">
+            Carte meditative &amp; laboratori di gruppo
+          </h2>
+          <p>
+            Sto creando, insieme a Benedetta Siri, delle carte meditative che daranno vita a nuovi
+            laboratori di gruppo. Vuoi essere la prima a saperlo quando le iscrizioni apriranno?
+          </p>
+          <CollettiviWaitlist />
+        </div>
       </section>
     </div>
   );
