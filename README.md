@@ -47,7 +47,7 @@ public/assets/      hero-meduse.jpg, chi-sono.jpg
 
 - **Fase 1 — Fondamenta**: setup Next.js, token, Home ✅
 - **Fase 2 — Contenuti**: Chi sono, Il Metodo, Percorsi ✅
-- **Fase 3 — Funzionalità**: prenotazioni + Google Calendar + questionario, form contatti ✅ · calcolatori — da fare
+- **Fase 3 — Funzionalità**: prenotazioni + Google Calendar + questionario, form contatti ✅ · calcolatore "Vibrazione Nome e Cognome" ✅ · Mappa dei Talenti — da fare
 - **Fase 4 — Rifinitura**: eventi, blog, testimonianze reali, link WhatsApp definitivo, deploy — da fare
 
 ## Prenotazioni, questionario e form contatti (Fase 3a)
@@ -90,6 +90,25 @@ Copia `.env.example` → `.env.local` (in produzione: Environment Variables su V
 - **Email form contatti** (Resend): `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`.
 
 Istruzioni passo-passo per ottenere i valori nel file `.env.example`.
+
+## Calcolatore "Vibrazione Nome e Cognome" (Fase 3b)
+
+Il regalo gratuito (`app/calcolatori/vibrazione-nome-cognome`, componente
+`components/VibrazioneCalculator.tsx`): flusso a 3 passaggi — nome/cognome → gate
+email + opt-in newsletter → risultato a schermo — con CTA finale "Vuoi approfondire?"
+che apre WhatsApp con messaggio precompilato. **Nessun pagamento sul sito**:
+l'approfondimento (Scheda Premium 88€) lo genera Silvia con il suo tool privato dopo
+il contatto WhatsApp. La pagina `app/calcolatori` è ora un hub con le due card
+(Vibrazione attiva, Mappa dei Talenti in arrivo).
+
+- **Logica di calcolo**: `lib/numerologia.ts` — sistema **pitagorico**, riduzione
+  teosofica con numeri maestri (11/22/33), tre numeri (Espressione, Anima, Personalità).
+  I significati sono i **testi ufficiali** (motto, peculiarità, doti, sfide, scopo, vocazione
+  per ogni numero). Nell'assaggio gratuito il risultato mostra **solo motto e peculiarità**;
+  gli altri campi restano riservati alla Scheda Premium.
+- **API**: `POST /api/lead` registra il lead (email + newsletter) notificando Silvia via
+  Resend e restituisce il risultato calcolato lato server. Il risultato viene mostrato
+  anche se l'email non è configurata (il regalo non dipende dall'invio); honeypot anti-spam.
 
 I file `*.md` alla radice e `Origine in movimento design.zip` sono i documenti di
 brief/design e restano nel repo come riferimento.
