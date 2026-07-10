@@ -66,23 +66,119 @@ export function calcolaVibrazione(nome: string, cognome: string): VibrazioneResu
   };
 }
 
-// Significati brevi (teaser). TESTI PROVVISORI da rivedere/confermare con Silvia:
-// l'approfondimento completo resta appannaggio della Scheda Premium.
-export const SIGNIFICATI: Record<number, { parola: string; testo: string }> = {
-  1: { parola: 'Iniziativa', testo: 'Energia che apre strade: indipendenza, coraggio, il seme di ogni inizio.' },
-  2: { parola: 'Relazione', testo: 'Sensibilità e ascolto: la forza gentile che unisce e tiene insieme.' },
-  3: { parola: 'Espressione', testo: 'Creatività e parola: la gioia che nasce quando ti mostri per come sei.' },
-  4: { parola: 'Radici', testo: 'Concretezza e metodo: costruire con pazienza fondamenta che durano.' },
-  5: { parola: 'Movimento', testo: 'Libertà e cambiamento: la curiosità che ti fa attraversare il mondo.' },
-  6: { parola: 'Cura', testo: 'Amore e responsabilità: l’armonia che crei intorno a chi ami.' },
-  7: { parola: 'Profondità', testo: 'Ricerca interiore: il bisogno di capire, oltre la superficie delle cose.' },
-  8: { parola: 'Potere', testo: 'Realizzazione e concretezza: la capacità di dare forma e valore.' },
-  9: { parola: 'Compassione', testo: 'Apertura al mondo: dare, lasciare andare, servire qualcosa di più grande.' },
-  11: { parola: 'Ispirazione', testo: 'Numero maestro: intuizione e sensibilità che illuminano anche gli altri.' },
-  22: { parola: 'Costruzione', testo: 'Numero maestro: la visione che diventa opera concreta e duratura.' },
-  33: { parola: 'Guarigione', testo: 'Numero maestro: amore incondizionato al servizio della crescita altrui.' },
+// Significati ufficiali per numero (fonte: prompt_claude_code.md). Testi da NON modificare.
+// Nell'assaggio gratuito il calcolatore mostra solo `motto` e `peculiarita`; gli altri campi
+// (doti, sfide, scopo, vocazione) restano riservati alla Scheda Premium e non vengono mostrati.
+export type Significato = {
+  motto: string;
+  peculiarita: string;
+  doti: string;
+  sfide: string;
+  scopo: string;
+  vocazione: string;
 };
 
-export function significato(n: number) {
-  return SIGNIFICATI[n] ?? { parola: '', testo: '' };
+export const SIGNIFICATI: Record<number, Significato> = {
+  1: {
+    motto: 'io sono, io voglio e io desidero essere me stesso',
+    peculiarita: 'attivo, originale, determinato, leale, indipendente, leader',
+    doti: 'autosufficienza, immaginazione, padronanza',
+    sfide: 'egoismo, ostinazione, impulsività',
+    scopo: 'realizzazione, successo, riconoscimenti',
+    vocazione: 'dirigente, politico, progettista, inventore, scrittore',
+  },
+  2: {
+    motto: 'io comprendo, io aiuto, io collaboro',
+    peculiarita: 'comprensivo, cooperativo, analitico, gentile, artistico',
+    doti: 'fascino, comprensione, amorevolezza',
+    sfide: 'dualismo, incertezza, bassa autostima',
+    scopo: 'relazioni, scambio, sicurezza',
+    vocazione: 'diplomatico, psicologo, artista, contabile',
+  },
+  3: {
+    motto: 'io sono la gioia, io sono il gioco, io sono la possibilità',
+    peculiarita: 'comunicativo, gioioso, creativo, ottimista, energico',
+    doti: 'entusiasmo, immaginazione, versatilità',
+    sfide: 'permalosità, esagerazione, dispersione',
+    scopo: 'godersi la vita',
+    vocazione: 'coach, comunicatore, scrittore, musicista, artista',
+  },
+  4: {
+    motto: 'io costruisco, io realizzo, io sono concreto',
+    peculiarita: 'responsabile, stabile, pratico, affidabile, leale',
+    doti: 'concentrazione, sistematicità',
+    sfide: 'testardaggine, visione limitata, rigidità',
+    scopo: 'realizzare qualcosa di solido e duraturo',
+    vocazione: 'imprenditore, amministratore, artigiano, avvocato',
+  },
+  5: {
+    motto: 'io mi muovo, io esploro, io mi espando',
+    peculiarita: 'avventuroso, curioso, dinamico, anticonformista',
+    doti: 'motivazione, magnetismo, competitività',
+    sfide: 'disordine, irrequietezza, inaffidabilità',
+    scopo: 'vincere, sperimentare, viaggiare',
+    vocazione: 'imprenditore, giornalista, mondo dello spettacolo',
+  },
+  6: {
+    motto: 'io sento, io partecipo, io aiuto',
+    peculiarita: 'amorevole, equilibrato, compassionevole, generoso',
+    doti: 'diplomazia, affidabilità, affettuosità',
+    sfide: 'ansia, codipendenza, sensi di colpa',
+    scopo: 'occuparsi degli altri, creare armonia',
+    vocazione: 'educatore, terapista, operatore sanitario, musicista',
+  },
+  7: {
+    motto: 'io cerco, io trovo, io mi elevo',
+    peculiarita: 'intuitivo, introspettivo, analitico, spirituale, ascetico',
+    doti: 'profondità, analisi, perfezione',
+    sfide: 'diffidenza, orgoglio, solitudine',
+    scopo: 'capire, elevarsi',
+    vocazione: 'consulente, professore, analista, psicologo, mistico',
+  },
+  8: {
+    motto: 'io posso, io so, io arrivo a tutto',
+    peculiarita: 'audace, ambizioso, intraprendente, sicuro, professionale',
+    doti: 'decisione, coraggio, capacità di delegare',
+    sfide: 'dominio, competizione, manipolazione',
+    scopo: 'ottenere potere e controllo, elevarsi',
+    vocazione: 'dirigente, editore, ingegnere, analista finanziario',
+  },
+  9: {
+    motto: 'io posso, io so, io arrivo a tutto',
+    peculiarita: 'intuitivo, compassionevole, saggio, tollerante, artista',
+    doti: 'visione globale, capacità di influenzare',
+    sfide: "intolleranza, indecisione, sbalzi d'umore",
+    scopo: 'lasciare un segno nel mondo',
+    vocazione: 'guaritore, operatore umanitario, leader, attore',
+  },
+  11: {
+    motto: 'io intuisco, io percepisco, io vedo oltre',
+    peculiarita: 'idealista, intuitivo, ispirato, eccentrico, esteta',
+    doti: 'trasformazione, svelare verità superiori',
+    sfide: 'illusione, isolamento, eccesso di input',
+    scopo: 'portare i sogni a livello della realtà',
+    vocazione: 'comunicatore, poeta, inventore, psicologo',
+  },
+  22: {
+    motto: 'io rendo concreto ciò che è ideale',
+    peculiarita: 'autorevole, costruttivo, lungimirante',
+    doti: 'visione, strategia, perseveranza',
+    sfide: 'troppo innovativo, esagera con impegni',
+    scopo: 'elevare e portare a termine una missione',
+    vocazione: 'leader, politico, pianificatore',
+  },
+  33: {
+    motto: 'io amo il prossimo più di me stesso',
+    peculiarita: 'visionario, compassionevole, responsabile',
+    doti: 'risoluzione dei conflitti, abnegazione',
+    sfide: 'autorità, sacrificio, prendersi cura di sé',
+    scopo: 'portare i sogni a livello della realtà',
+    vocazione: 'leader, maestro, guaritore, insegnante',
+  },
+};
+
+const EMPTY: Significato = { motto: '', peculiarita: '', doti: '', sfide: '', scopo: '', vocazione: '' };
+
+export function significato(n: number): Significato {
+  return SIGNIFICATI[n] ?? EMPTY;
 }

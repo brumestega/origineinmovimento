@@ -138,20 +138,26 @@ export default function VibrazioneCalculator() {
 
           <div className="vibr-hero">
             <div className="vibr-number gold-text">{result.espressione}</div>
-            <div className="vibr-hero-word">{significato(result.espressione).parola}</div>
-            <p className="vibr-hero-text">{significato(result.espressione).testo}</p>
+            <p className="vibr-motto">«{significato(result.espressione).motto}»</p>
+            {significato(result.espressione).peculiarita && (
+              <p className="vibr-pecul">{significato(result.espressione).peculiarita}</p>
+            )}
           </div>
 
           <div className="vibr-grid">
             <div className="vibr-card">
               <div className="vibr-card-h">Anima · {result.anima}</div>
-              <div className="vibr-card-w">{significato(result.anima).parola}</div>
-              <p className="vibr-card-t">{significato(result.anima).testo}</p>
+              <p className="vibr-card-motto">«{significato(result.anima).motto}»</p>
+              {significato(result.anima).peculiarita && (
+                <p className="vibr-card-pecul">{significato(result.anima).peculiarita}</p>
+              )}
             </div>
             <div className="vibr-card">
               <div className="vibr-card-h">Personalità · {result.personalita}</div>
-              <div className="vibr-card-w">{significato(result.personalita).parola}</div>
-              <p className="vibr-card-t">{significato(result.personalita).testo}</p>
+              <p className="vibr-card-motto">«{significato(result.personalita).motto}»</p>
+              {significato(result.personalita).peculiarita && (
+                <p className="vibr-card-pecul">{significato(result.personalita).peculiarita}</p>
+              )}
             </div>
           </div>
 

@@ -103,8 +103,9 @@ il contatto WhatsApp. La pagina `app/calcolatori` è ora un hub con le due card
 
 - **Logica di calcolo**: `lib/numerologia.ts` — sistema **pitagorico**, riduzione
   teosofica con numeri maestri (11/22/33), tre numeri (Espressione, Anima, Personalità).
-  Algoritmo e testi dei significati sono isolati qui per essere allineati facilmente al
-  sistema esatto di Silvia (i significati attuali sono **testi provvisori da confermare**).
+  I significati sono i **testi ufficiali** (motto, peculiarità, doti, sfide, scopo, vocazione
+  per ogni numero). Nell'assaggio gratuito il risultato mostra **solo motto e peculiarità**;
+  gli altri campi restano riservati alla Scheda Premium.
 - **API**: `POST /api/lead` registra il lead (email + newsletter) notificando Silvia via
   Resend e restituisce il risultato calcolato lato server. Il risultato viene mostrato
   anche se l'email non è configurata (il regalo non dipende dall'invio); honeypot anti-spam.

@@ -448,17 +448,20 @@ select.input-box { appearance: none; -webkit-appearance: none; background-image:
 .vibr-result { animation: oimRise .6s ease both; }
 .vibr-hero { text-align: center; margin: 22px 0 30px; }
 .vibr-number { font-family: 'Cormorant Garamond', serif; font-size: 108px; line-height: .9; font-weight: 600; }
-.vibr-hero-word { font-family: 'Cormorant Garamond', serif; font-size: 26px; color: var(--ink); margin-top: 6px; }
-.vibr-hero-text { font-size: 15px; line-height: 1.7; color: var(--body); font-weight: 300; max-width: 440px; margin: 12px auto 0; }
+.vibr-motto {
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 23px;
+  line-height: 1.4; color: var(--ink); margin-top: 8px; max-width: 460px; margin-left: auto; margin-right: auto;
+}
+.vibr-pecul { font-size: 13.5px; line-height: 1.7; color: var(--body); font-weight: 300; max-width: 440px; margin: 12px auto 0; }
 
 .vibr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
 .vibr-card {
   border: 1px solid var(--border-soft); border-radius: 14px; padding: 22px 22px 20px;
   background: var(--card); box-shadow: var(--shadow-card);
 }
-.vibr-card-h { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-.vibr-card-w { font-family: 'Cormorant Garamond', serif; font-size: 21px; color: var(--ink); margin-bottom: 6px; }
-.vibr-card-t { font-size: 13.5px; line-height: 1.6; color: var(--body); font-weight: 300; }
+.vibr-card-h { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.vibr-card-motto { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; line-height: 1.4; color: var(--ink); margin-bottom: 8px; }
+.vibr-card-pecul { font-size: 13px; line-height: 1.6; color: var(--body); font-weight: 300; }
 
 .vibr-cta {
   text-align: center; border-top: 1px solid var(--border-line); padding-top: 26px;
