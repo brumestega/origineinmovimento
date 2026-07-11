@@ -1,8 +1,7 @@
-// Numero reale da contatti (347 9005251 → +39). Il messaggio precompilato
-// verrà rifinito in Fase 4 insieme al resto dei link esterni.
+// Numero reale (347 9005251 → +39 393479005251) con messaggio precompilato.
 const WA_HREF =
   'https://wa.me/393479005251?text=' +
-  encodeURIComponent('Ciao Silvia, ho visto il sito di Origine in Movimento e vorrei qualche informazione.');
+  encodeURIComponent('Ciao Silvia, vorrei sapere di più su Origine in Movimento');
 
 export default function WhatsappButton() {
   return (

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import CollettiviWaitlist from '@/components/CollettiviWaitlist';
 
 export const metadata: Metadata = {
   title: 'Percorsi',
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 // Elenco servizi definitivo (fase-2 / prompt-servizi-aggiornati).
 // La modalità è indicata su ogni scheda perché cambia cosa una persona
 // può prenotare in base a dove vive.
+// I Trattamenti Ankàla hanno una scheda estesa dedicata (sotto la griglia).
 const services = [
   {
     n: '01',
@@ -21,14 +23,6 @@ const services = [
   },
   {
     n: '02',
-    title: 'Trattamenti Ankàla',
-    body: 'Un trattamento energetico per sciogliere le tensioni e ritrovare equilibrio. Consigliate 3 sedute iniziali.',
-    modality: 'Online e in presenza',
-    badge: 'badge-online',
-    price: '88€ a seduta',
-  },
-  {
-    n: '03',
     title: 'Registri Akashici',
     body: "Un accesso alla memoria profonda dell'anima, per fare chiarezza su pattern e vissuti.",
     modality: 'Online e in presenza',
@@ -36,7 +30,7 @@ const services = [
     price: '88€',
   },
   {
-    n: '04',
+    n: '03',
     title: 'Armonizzazione',
     body: 'Un riequilibrio energetico dolce per corpo e spazio interiore.',
     modality: 'Online e in presenza',
@@ -44,7 +38,7 @@ const services = [
     price: '88€',
   },
   {
-    n: '05',
+    n: '04',
     title: 'Trattamento sonoro',
     body: 'Frequenze e vibrazioni per sciogliere le tensioni in profondità.',
     modality: 'Solo in presenza',
@@ -52,13 +46,25 @@ const services = [
     price: '88€',
   },
   {
-    n: '06',
+    n: '05',
     title: 'Rilevamento di geopatia in casa',
     body: "Un sopralluogo fisico per individuare e sciogliere le interferenze energetiche nei tuoi spazi di vita.",
     modality: 'Solo a domicilio',
     badge: 'badge-domicilio',
     price: '180€',
   },
+];
+
+// Protocolli Ankàla mostrati nella scheda estesa (griglia di card piccole).
+const ankalaTreatments = [
+  { t: 'Riconnessione bambino interiore', d: 'Riconnessione con la tua essenza originaria e trasformazione ferite emotive.' },
+  { t: 'Trasformazione emozionale', d: 'Identificazione e trasformazione di pattern comportamentali ripetitivi.' },
+  { t: 'Liberazione antenati', d: 'Liberazione da schemi transgenerazionali ereditati da entrambi i lati.' },
+  { t: 'Attivazione magnetismo', d: 'Risveglio del potere di attrazione e manifestazione personale.' },
+  { t: 'Purificazione aura', d: "Pulizia dell'energia toroidale e del campo aurico." },
+  { t: 'Pulizia e riattivazione chakra', d: 'Armonizzazione completa dei centri energetici principali.' },
+  { t: 'Armonizzazione intuitiva', d: "Lavoro guidato dall'intuizione sulle aree che necessitano attenzione." },
+  { t: 'Sblocco nodi energetici', d: 'Liberazione da lavori di stregoneria e scioglimento vincoli.' },
 ];
 
 const phases = [
@@ -106,6 +112,143 @@ export default function PercorsiPage() {
         </div>
       </section>
 
+      {/* TRATTAMENTI ANKÀLA — scheda estesa dedicata */}
+      <section className="ankala" aria-labelledby="ankala-title">
+        <div className="ankala-top">
+          {/* Foto seduta: sfondo con fallback a pattern oro se il file non è ancora presente */}
+          <div
+            className="ankala-media"
+            role="img"
+            aria-label="Una seduta Ankàla: cristalli sulla tavola dell'Albero della Vita"
+          />
+          <div className="ankala-intro">
+            <div className="serv-head-label">Trattamento energetico</div>
+            <h2 id="ankala-title" className="ankala-title serif">
+              Trattamenti Ankàla
+            </h2>
+            <div className="serv-meta" style={{ marginBottom: 20 }}>
+              <span className="badge badge-online">Online e in presenza</span>
+              <span className="serv-price serif">88€ a seduta</span>
+            </div>
+            <h3 className="ankala-sub serif">Cos&apos;è Ankàla</h3>
+            <p className="ankala-p">
+              Ankàla è un&apos;esclusiva tecnica di guarigione e trasmissione energetica che utilizza
+              33 portali con simbologia sacra dell&apos;acqua cosmica di Lira. «Ankàla» significa
+              proprio «acqua» nel linguaggio lirano.
+            </p>
+            <p className="ankala-p">
+              Questa potente pratica serve ad attivare le virtù più elevate dell&apos;essere, portando
+              un profondo riequilibrio emozionale, energetico, fisico ed eterico.
+            </p>
+            <p className="ankala-p">
+              Durante la seduta si lavora sul campo energetico della persona, trasformando vibrazioni
+              dissonanti in vibrazioni armoniche attraverso un lavoro profondo sulle memorie cellulari
+              e dell&apos;anima.
+            </p>
+            <div className="ankala-facts">
+              <div className="ankala-fact">
+                <span className="ankala-fact-h">Durata</span>60 minuti
+              </div>
+              <div className="ankala-fact">
+                <span className="ankala-fact-h">Modalità</span>Online e presenza
+              </div>
+              <div className="ankala-fact">
+                <span className="ankala-fact-h">Consiglio</span>3 sedute iniziali
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="ankala-audience">
+          <span className="ankala-sub-inline serif">A chi si rivolge</span>
+          <p className="ankala-p" style={{ margin: 0 }}>
+            A chi vuole uscire da vecchi schemi, riabilitare l&apos;equilibrio interiore, attivare la
+            propria fiamma interiore, trasformare l&apos;acqua del proprio corpo in luce e liberarsi
+            di Eggregore limitanti.
+          </p>
+        </div>
+
+        <div className="ankala-figure">
+          <div
+            className="ankala-figure-img"
+            role="img"
+            aria-label="La tavola Ankàla Quantum Therapy con i 33 portali e la simbologia sacra"
+          />
+        </div>
+
+        <div className="ankala-treatments-head">Trattamenti disponibili</div>
+        <div className="ankala-grid">
+          {ankalaTreatments.map((a) => (
+            <div className="ankala-card" key={a.t}>
+              <div className="ankala-card-t serif">{a.t}</div>
+              <p className="ankala-card-d">{a.d}</p>
+            </div>
+          ))}
+        </div>
+        <p className="ankala-note">Questi sono alcuni protocolli, ma ve ne sono molti altri.</p>
+
+        <div style={{ textAlign: 'center', marginTop: 30 }}>
+          <Link className="btn" href="/prenota?tipo=session">
+            Prenota un Trattamento
+          </Link>
+        </div>
+      </section>
+
+      {/* STRUMENTI COMPLEMENTARI */}
+      <section className="tools" aria-labelledby="tools-title">
+        <div className="serv-head">
+          <div className="serv-head-label" id="tools-title">
+            Strumenti complementari
+          </div>
+        </div>
+        <div className="tools-card">
+          {/* Illustrazione: fallback a pattern oro finché /assets/sciogliere-credenze.jpg non è presente */}
+          <div
+            className="tools-media"
+            role="img"
+            aria-label="Illustrazione: una figura femminile che emerge da un fiore di loto, tra stelle e linee d'oro"
+          />
+          <div className="tools-body">
+            <h3 className="tools-title serif">Sciogliere le Credenze</h3>
+            <div className="serv-meta" style={{ marginBottom: 18 }}>
+              <span className="badge badge-online">Online e in presenza</span>
+              <span className="serv-price serif">88€</span>
+            </div>
+            <p className="ankala-p">
+              Molti dei blocchi che viviamo non sono nostri — sono credenze inconsce, spesso
+              ereditate o assorbite nel tempo, ed eggregore limitanti: strutture energetiche
+              condivise che ci trattengono in schemi di pensiero e comportamento non più nostri.
+              Questo accompagnamento lavora proprio lì, dove la mente razionale non arriva da sola.
+            </p>
+            <p className="ankala-p">
+              Attraverso un lavoro mirato sul subconscio, ti accompagno a riconoscere le credenze che
+              ti tengono bloccata, scioglierle, e liberarti da vincoli energetici che non ti
+              appartengono più — per fare spazio a una versione più libera e autentica di te.
+            </p>
+            <div className="ankala-facts">
+              <div className="ankala-fact">
+                <span className="ankala-fact-h">Durata</span>60 minuti
+              </div>
+              <div className="ankala-fact">
+                <span className="ankala-fact-h">Modalità</span>Online e presenza
+              </div>
+            </div>
+            <div className="tools-audience">
+              <span className="ankala-sub-inline serif">A chi si rivolge</span>
+              <p className="ankala-p" style={{ margin: 0 }}>
+                A chi sente di ripetere sempre gli stessi schemi, nonostante l&apos;impegno
+                consapevole — e vuole lavorare alla radice, non solo in superficie.
+              </p>
+            </div>
+            <div style={{ marginTop: 26 }}>
+              <Link className="btn" href="/prenota?tipo=session">
+                Prenota
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* PERCORSO PRINCIPALE — pacchetto unico, non scomponibile */}
       <section className="premium">
         <div className="premium-head">
@@ -133,6 +276,23 @@ export default function PercorsiPage() {
         <Link className="btn" href="/prenota">
           Prenota la call conoscitiva gratuita
         </Link>
+      </section>
+
+      {/* PERCORSI COLLETTIVI — teaser "in arrivo" con lista d'attesa */}
+      <section className="tools" aria-labelledby="collettivi-title">
+        <div className="newsletter">
+          <span className="premium-badge" style={{ marginBottom: 16 }}>
+            Percorsi collettivi · In arrivo
+          </span>
+          <h2 id="collettivi-title" className="serif">
+            Carte meditative &amp; laboratori di gruppo
+          </h2>
+          <p>
+            Sto creando, insieme a Benedetta Siri, delle carte meditative che daranno vita a nuovi
+            laboratori di gruppo. Vuoi essere la prima a saperlo quando le iscrizioni apriranno?
+          </p>
+          <CollettiviWaitlist />
+        </div>
       </section>
     </div>
   );

@@ -7,7 +7,7 @@ import BookingWidget, { BookingType, BookingStep } from '@/components/BookingWid
 const LEAD: Record<BookingType, string> = {
   call: '30 minuti, gratuita, senza impegno.',
   session: "Un'ora insieme, per proseguire il tuo percorso.",
-  mappa: "Un'ora dal vivo per leggere insieme la tua Mappa dei Talenti.",
+  mappa: 'Due incontri da un’ora per leggere insieme, passo dopo passo, la tua Mappa dei Talenti.',
 };
 // Mostrato finché non si è ancora scelto un tipo (scelta modalità/tipo, o percorso in presenza).
 const LEAD_DEFAULT = 'Scegli come e quando ci incontriamo.';

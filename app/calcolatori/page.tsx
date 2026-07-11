@@ -34,16 +34,32 @@ export default function CalcolatoriPage() {
         </div>
 
         <div className="accent-card">
-          <span className="eyebrow-sm">Gratis + analisi completa</span>
+          <span className="eyebrow-sm">Strumento completo</span>
           <h3 className="serif">Mappa dei Talenti</h3>
           <p>
-            Dalla tua data di nascita, i 6 numeri che custodiscono i tuoi talenti e la tua
-            direzione. Gratis subito; l’analisi completa con PDF e lettura dal vivo a 88€.
+            Dalla tua data di nascita, la tua mappa numerologica completa: talenti, schemi familiari
+            e direzione di vita, con export in PDF. Si apre nell’applicazione dedicata.
           </p>
-          <Link className="btn" href="/calcolatori/mappa-dei-talenti">
-            Scopri la tua mappa
-          </Link>
+          <a className="btn" href="/calcolatore/index.html" target="_blank" rel="noopener">
+            Apri la Mappa dei Talenti
+          </a>
         </div>
+      </div>
+
+      {/* CTA: dalla Mappa (gratuita) alla lettura guidata dal vivo (prenotazione) */}
+      <div className="newsletter" style={{ marginTop: 44 }}>
+        <span className="premium-badge" style={{ marginBottom: 16 }}>
+          Lettura guidata · 160€ · 2 incontri da 60 min
+        </span>
+        <h2 className="serif">Vuoi una lettura guidata della tua Mappa insieme a me?</h2>
+        <p>
+          Il calcolatore e il PDF sono un regalo, tuoi da esplorare quando vuoi. Se desideri andare in
+          profondità, un percorso di <strong>due incontri da un’ora</strong> dal vivo: li prenoti
+          entrambi ora, per un cammino strutturato e non improvvisato.
+        </p>
+        <Link className="btn" href="/prenota?tipo=mappa">
+          Prenota i due incontri
+        </Link>
       </div>
     </div>
   );

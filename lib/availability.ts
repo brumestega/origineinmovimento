@@ -5,9 +5,10 @@
 //                lunedì 7:00–11:00, più mer/ven pomeriggio 17:00–22:00. Il mer/ven mattina
 //                la fascia 7:00–10:00 è riservata alle call, quindi le sessioni partono
 //                dalle 10:00 (resta solo 10:00–11:00).
-//  - 'mappa'   → Lettura Mappa dei Talenti dal vivo, 1 ora. Inclusa nel pacchetto premium (88€):
-//                si raggiunge solo dopo l'acquisto (deep-link /prenota?tipo=mappa), NON è tra le
-//                opzioni self-service pubbliche. Stessa disponibilità delle sessioni.
+//  - 'mappa'   → Lettura guidata della Mappa dei Talenti dal vivo. È un PERCORSO di DUE incontri
+//                da 1 ora (160€), prenotati entrambi nello stesso flusso. Si raggiunge dal deep-link
+//                /prenota?tipo=mappa (CTA nell'hub Calcolatori), NON è tra le opzioni self-service
+//                pubbliche. Stessa disponibilità (giorni/orari) delle sessioni.
 //
 // Modificare qui per cambiare giorni/orari/durate.
 // (Le sessioni in presenza NON usano questa logica: si concordano via WhatsApp/email.)
@@ -19,8 +20,12 @@ export type BookingType = 'call' | 'session' | 'mappa';
 export const DURATION_MIN: Record<BookingType, number> = {
   call: 30,
   session: 60,
-  mappa: 60,
+  mappa: 60, // durata del SINGOLO incontro (il pacchetto mappa ne prevede due)
 };
+
+// Intervallo minimo tra i due incontri della lettura guidata della Mappa (in giorni):
+// dà tempo di integrare la prima lettura prima della seconda. Valore proposto: 2 settimane.
+export const MAPPA_MIN_GAP_DAYS = 14;
 
 // Durata (minuti) di una prenotazione in base al tipo.
 export function durationMin(type: BookingType): number {

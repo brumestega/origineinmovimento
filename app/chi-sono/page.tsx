@@ -36,6 +36,50 @@ const laboratori = [
   },
 ];
 
+// Formazione reale di Silvia — lista credenziali (percorso, ente/insegnante, anno).
+const formazione = [
+  {
+    t: 'Reiki — I e II livello, Advanced Reiki Healing System',
+    d: 'Shiv Piel (Reiki Master), Dao-Daolit · 2015',
+  },
+  {
+    t: 'Pranic Healing Course',
+    d: 'Institute for Inner Studies · Master Choa Kok Sui',
+  },
+  {
+    t: 'Scuola del Sintomo — Daleth',
+    d: '«La logica della vita: biologia umana» e «Il senso del clan: un tranello insidioso o un tesoro inestimabile?» (128 ore ciascuno)',
+  },
+  {
+    t: 'Spiritual Quantum Emotions e Spiritual Quantum Coaching',
+    d: 'Embassy of Peace · Giovanni Vota',
+  },
+  {
+    t: 'Master di specializzazione in Cromopsicologia',
+    d: 'Unisaggezza · Samya Ilaria Di Donato',
+  },
+  {
+    t: 'Quantum Intuition',
+    d: 'Joy Martina PhD',
+  },
+  {
+    t: 'Lettore dei Registri Akashici Quantici — livello I e II',
+    d: 'Agartha · Andrea Bassi',
+  },
+  {
+    t: 'Operatore di Guarigione Quantica Ankàla — livello I, e Ankàla Multiverso livello II',
+    d: 'Agartha · Andrea Bassi',
+  },
+];
+
+// Discipline integrate nel lavoro di oggi — parte del racconto narrativo "Il mio percorso".
+const disciplineIntegrate = [
+  { t: 'Ankàla', d: 'Riequilibrio energetico quantico, tecnologia per le memorie cellulari' },
+  { t: 'Numerologia Evolutiva', d: 'Mappa dei Talenti e archetipi' },
+  { t: 'Cromopsicologia', d: 'Psicologia del colore e vibrazioni' },
+  { t: 'Spiritual Quantum Coaching', d: 'Accompagnamento spirituale e quantico' },
+];
+
 export default function ChiSonoPage() {
   return (
     <div className="page">
@@ -86,12 +130,61 @@ export default function ChiSonoPage() {
           </p>
 
           <div className="chisono-block">
+            <span className="eyebrow-sm">Il mio percorso</span>
+            <h2 className="chisono-sub serif" style={{ margin: '4px 0 12px' }}>
+              Da dove parto
+            </h2>
+            <p className="chisono-p">
+              Il mio viaggio è iniziato con lo studio della connessione mente-corpo e la decodifica
+              del sintomo: comprendere come il corpo parli attraverso i segnali fisici, rivelando
+              disagi emotivi e blocchi energetici non risolti.
+            </p>
+            <p className="chisono-p">
+              Questo mi ha portato naturalmente alla metagenealogia, lo studio degli schemi familiari
+              e delle eredità transgenerazionali. Ho scoperto come le memorie dei nostri antenati
+              influenzino profondamente le nostre vite, creando pattern ripetitivi che possiamo
+              finalmente riconoscere e trasformare.
+            </p>
+            <p className="chisono-p">
+              Da queste basi solide, ho integrato diverse tecniche e discipline che arricchiscono il
+              mio lavoro oggi:
+            </p>
+            <ul className="formazione-list">
+              {disciplineIntegrate.map((d) => (
+                <li className="formazione-item" key={d.t}>
+                  <span className="formazione-t">{d.t}</span>
+                  <span className="formazione-d">{d.d}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="chisono-p" style={{ marginTop: 20 }}>
+              Il mio percorso include anche studi in Reiki e nel simbolismo dei tarocchi, che hanno
+              arricchito la mia sensibilità energetica e intuitiva nel tempo.
+            </p>
+            <p className="chisono-p">
+              Ogni strumento che ho appreso è un tassello di un mosaico più ampio: aiutarti a
+              ritrovare il tuo stato originario, quella centratura autentica da cui puoi vivere
+              pienamente la tua vita.
+            </p>
+          </div>
+
+          <div className="chisono-block">
             <span className="eyebrow-sm">Formazione</span>
-            <div className="list-plain">
-              <div>◦ Numerologia evolutiva — [ tua formazione ]</div>
-              <div>◦ Trattamenti Ankàla — [ tua formazione ]</div>
-              <div>◦ Rilevamento geopatico — [ tua formazione ]</div>
-            </div>
+            <h2 className="chisono-sub serif" style={{ margin: '4px 0 12px' }}>
+              La mia formazione
+            </h2>
+            <p className="chisono-p" style={{ marginBottom: 6 }}>
+              Il mio percorso di formazione è stato ampio e trasversale, perché ho voluto costruire un
+              metodo che unisse discipline diverse invece di fermarmi a una sola:
+            </p>
+            <ul className="formazione-list">
+              {formazione.map((f) => (
+                <li className="formazione-item" key={f.t}>
+                  <span className="formazione-t">{f.t}</span>
+                  <span className="formazione-d">{f.d}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
           <Link className="btn" href="/prenota" style={{ marginTop: 36 }}>
