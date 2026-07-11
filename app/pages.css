@@ -529,6 +529,12 @@ select.input-box { appearance: none; -webkit-appearance: none; background-image:
   padding: 6px 14px; border-radius: 40px;
 }
 
+/* Indicatore "primo/secondo incontro" per la lettura guidata della Mappa (percorso a 2 tappe) */
+.booking-incontro {
+  margin: -6px 0 14px;
+  font-size: 13px; color: var(--ink-soft); font-weight: 400;
+}
+
 /* Percorso "in presenza" — da concordare via WhatsApp/email */
 .presence-box {
   border: 1px solid rgba(156,107,34,.28); border-radius: 14px;

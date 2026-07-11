@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { MAPPA_MIN_GAP_DAYS } from '@/lib/availability';
 
 export type BookingType = 'call' | 'session' | 'mappa';
 
@@ -30,11 +31,11 @@ const TYPE_META: Record<
     confirmNoun: 'la nostra sessione',
   },
   mappa: {
-    label: 'Lettura Mappa dei Talenti',
-    duration: '1 ora',
+    label: 'Lettura guidata della Mappa dei Talenti',
+    duration: '2 incontri da 1 ora',
     free: false,
     hint: 'Mattine tutti i giorni tranne il lunedì; pomeriggi il mercoledì e il venerdì.',
-    confirmNoun: 'la tua lettura della Mappa dei Talenti',
+    confirmNoun: 'i tuoi due incontri della Mappa dei Talenti',
   },
 };
 
@@ -94,6 +95,22 @@ export default function BookingWidget({ onStateChange }: Props) {
   const [slotsError, setSlotsError] = useState('');
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 
+  // Percorso "mappa": due incontri prenotati insieme. `picking` indica quale si sta
+  // scegliendo (1 o 2); il primo incontro viene messo da parte mentre si sceglie il secondo.
+  const [picking, setPicking] = useState<1 | 2>(1);
+  const [firstDate, setFirstDate] = useState<{ y: number; m: number; d: number } | null>(null);
+  const [firstSlot, setFirstSlot] = useState<Slot | null>(null);
+  const isMappa = bookingType === 'mappa';
+
+  // Data minima selezionabile: per il 2º incontro della mappa è il 1º incontro + intervallo.
+  const minDate = useMemo(() => {
+    if (isMappa && picking === 2 && firstDate) {
+      const d = new Date(firstDate.y, firstDate.m, firstDate.d + MAPPA_MIN_GAP_DAYS);
+      return d > today ? d : today;
+    }
+    return today;
+  }, [isMappa, picking, firstDate, today]);
+
   const [form, setForm] = useState({
     name: '', email: '', phone: '', reason: '', contactPreference: 'Email', company: '',
   });
@@ -131,13 +148,14 @@ export default function BookingWidget({ onStateChange }: Props) {
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(viewYear, viewMonth, d);
       const selectable =
-        weekdays.includes(date.getDay()) && date >= today && date <= horizon;
+        weekdays.includes(date.getDay()) && date >= minDate && date <= horizon;
       cells.push({ d, selectable });
     }
     return cells;
-  }, [viewYear, viewMonth, today, horizon, bookingType]);
+  }, [viewYear, viewMonth, minDate, horizon, bookingType]);
 
-  const canPrev = viewYear > today.getFullYear() || viewMonth > today.getMonth();
+  const canPrev =
+    new Date(viewYear, viewMonth, 1) > new Date(minDate.getFullYear(), minDate.getMonth(), 1);
   const canNext =
     new Date(viewYear, viewMonth, 1) < new Date(horizon.getFullYear(), horizon.getMonth(), 1);
 
@@ -154,6 +172,9 @@ export default function BookingWidget({ onStateChange }: Props) {
 
   function pickType(t: BookingType) {
     setBookingType(t);
+    setPicking(1);
+    setFirstDate(null);
+    setFirstSlot(null);
     setSelectedDate(null);
     setSelectedSlot(null);
     setViewYear(today.getFullYear());
@@ -161,12 +182,8 @@ export default function BookingWidget({ onStateChange }: Props) {
     setStep('date');
   }
 
-  async function pickDate(d: number) {
+  async function loadSlots(sel: { y: number; m: number; d: number }) {
     if (!bookingType) return;
-    const sel = { y: viewYear, m: viewMonth, d };
-    setSelectedDate(sel);
-    setSelectedSlot(null);
-    setStep('time');
     setLoadingSlots(true);
     setSlotsError('');
     setSlots([]);
@@ -184,16 +201,61 @@ export default function BookingWidget({ onStateChange }: Props) {
     }
   }
 
+  async function pickDate(d: number) {
+    if (!bookingType) return;
+    const sel = { y: viewYear, m: viewMonth, d };
+    setSelectedDate(sel);
+    setSelectedSlot(null);
+    setStep('time');
+    await loadSlots(sel);
+  }
+
+  // Scelta di un orario: per la mappa il 1º incontro apre la scelta del 2º; altrimenti si va al form.
+  function pickSlot(s: Slot) {
+    if (isMappa && picking === 1 && selectedDate) {
+      const base = selectedDate;
+      setFirstDate(base);
+      setFirstSlot(s);
+      setPicking(2);
+      setSelectedDate(null);
+      setSelectedSlot(null);
+      const md = new Date(base.y, base.m, base.d + MAPPA_MIN_GAP_DAYS);
+      const jump = md > today ? md : today;
+      setViewYear(jump.getFullYear());
+      setViewMonth(jump.getMonth());
+      setStep('date');
+    } else {
+      setSelectedSlot(s);
+      setStep('form');
+    }
+  }
+
+  // Torna a modificare il 1º incontro (dalla scelta del 2º).
+  async function backToFirst() {
+    if (!firstDate) return;
+    setPicking(1);
+    setSelectedDate(firstDate);
+    setSelectedSlot(firstSlot);
+    setViewYear(firstDate.y);
+    setViewMonth(firstDate.m);
+    setStep('time');
+    await loadSlots(firstDate);
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!selectedSlot || !bookingType) return;
+    if (isMappa && !firstSlot) return;
     setSubmitting(true);
     setSubmitError('');
     try {
+      const payload = isMappa
+        ? { type: bookingType, startUtc: firstSlot!.startUtc, startUtc2: selectedSlot.startUtc, ...form }
+        : { type: bookingType, startUtc: selectedSlot.startUtc, ...form };
       const res = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: bookingType, startUtc: selectedSlot.startUtc, ...form }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Non sono riuscita a confermare la prenotazione.');
@@ -207,6 +269,9 @@ export default function BookingWidget({ onStateChange }: Props) {
 
   const selectedDateLabel = selectedDate
     ? `${new Date(selectedDate.y, selectedDate.m, selectedDate.d).getDate()} ${MONTHS[selectedDate.m]} ${selectedDate.y}`
+    : '';
+  const firstDateLabel = firstDate
+    ? `${new Date(firstDate.y, firstDate.m, firstDate.d).getDate()} ${MONTHS[firstDate.m]} ${firstDate.y}`
     : '';
 
   const stepIndex = step === 'date' ? 0 : step === 'time' ? 1 : 2;
@@ -316,12 +381,23 @@ export default function BookingWidget({ onStateChange }: Props) {
       {/* STEP 1 — calendario */}
       {step === 'date' && meta && (
         <div className="cal">
-          <button type="button" className="booking-back" onClick={() => setStep('type')}>
-            ‹ Cambia tipo
+          <button
+            type="button"
+            className="booking-back"
+            onClick={() => (isMappa && picking === 2 ? backToFirst() : setStep('type'))}
+          >
+            {isMappa && picking === 2 ? '‹ Cambia primo incontro' : '‹ Cambia tipo'}
           </button>
           <div className="booking-typebar">
             {meta.label} · {meta.duration}
           </div>
+          {isMappa && (
+            <div className="booking-incontro">
+              {picking === 1
+                ? 'Primo incontro · scegli la data'
+                : `Secondo incontro · almeno ${MAPPA_MIN_GAP_DAYS} giorni dopo il primo`}
+            </div>
+          )}
           <div className="cal-head">
             <button
               type="button" className="cal-nav" onClick={goPrev} disabled={!canPrev}
@@ -363,7 +439,10 @@ export default function BookingWidget({ onStateChange }: Props) {
           <button type="button" className="booking-back" onClick={() => setStep('date')}>
             ‹ Cambia giorno
           </button>
-          <div className="booking-panel-h">{selectedDateLabel}</div>
+          <div className="booking-panel-h">
+            {isMappa ? (picking === 1 ? 'Primo incontro · ' : 'Secondo incontro · ') : ''}
+            {selectedDateLabel}
+          </div>
           {loadingSlots && <p className="booking-muted">Carico gli orari…</p>}
           {slotsError && <p className="booking-error">{slotsError}</p>}
           {!loadingSlots && !slotsError && slots.length === 0 && (
@@ -378,7 +457,7 @@ export default function BookingWidget({ onStateChange }: Props) {
                   key={s.startUtc}
                   type="button"
                   className="slot-btn"
-                  onClick={() => { setSelectedSlot(s); setStep('form'); }}
+                  onClick={() => pickSlot(s)}
                 >
                   {s.time}
                 </button>
@@ -396,9 +475,20 @@ export default function BookingWidget({ onStateChange }: Props) {
           </button>
           <div className="booking-recap">
             <span className="eyebrow-sm">{meta.label}</span>
-            <div className="booking-recap-line">
-              {selectedDateLabel} · <strong>{selectedSlot.time}</strong> · {meta.duration}
-            </div>
+            {isMappa && firstSlot ? (
+              <>
+                <div className="booking-recap-line">
+                  1º incontro: {firstDateLabel} · <strong>{firstSlot.time}</strong>
+                </div>
+                <div className="booking-recap-line">
+                  2º incontro: {selectedDateLabel} · <strong>{selectedSlot.time}</strong>
+                </div>
+              </>
+            ) : (
+              <div className="booking-recap-line">
+                {selectedDateLabel} · <strong>{selectedSlot.time}</strong> · {meta.duration}
+              </div>
+            )}
           </div>
 
           <form className="form-col" onSubmit={submit}>
@@ -457,9 +547,20 @@ export default function BookingWidget({ onStateChange }: Props) {
           <div className="booking-done-mark">✦</div>
           <h3 className="booking-done-title serif">È fatta.</h3>
           <p className="booking-done-p">
-            Ho fissato {meta.confirmNoun} per <strong>{selectedDateLabel}</strong> alle{' '}
-            <strong>{selectedSlot?.time}</strong>. Ti ho inviato l'invito via email con tutti i
-            dettagli e un promemoria. A presto ✦
+            {isMappa && firstSlot ? (
+              <>
+                Ho fissato {meta.confirmNoun}: <strong>{firstDateLabel}</strong> alle{' '}
+                <strong>{firstSlot.time}</strong> e <strong>{selectedDateLabel}</strong> alle{' '}
+                <strong>{selectedSlot?.time}</strong>. Ti ho inviato gli inviti via email con tutti i
+                dettagli e i promemoria. A presto ✦
+              </>
+            ) : (
+              <>
+                Ho fissato {meta.confirmNoun} per <strong>{selectedDateLabel}</strong> alle{' '}
+                <strong>{selectedSlot?.time}</strong>. Ti ho inviato l&apos;invito via email con
+                tutti i dettagli e un promemoria. A presto ✦
+              </>
+            )}
           </p>
         </div>
       )}

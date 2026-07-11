@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const faqs: { q: string; a: React.ReactNode }[] = [
   {
     q: 'Quanto dura una seduta?',
-    a: 'Mappa dei Talenti: 60 minuti (sessione Premium con lettura dal vivo). Ankàla, Registri Akashici, Armonizzazione, Sciogliere le Credenze: 60 minuti. Consiglio un ciclo iniziale di 3 sedute per Ankàla, per risultati più profondi.',
+    a: 'La lettura guidata della Mappa dei Talenti è un percorso di 2 incontri da 60 minuti (160€). Ankàla, Registri Akashici, Armonizzazione, Sciogliere le Credenze: 60 minuti. Consiglio un ciclo iniziale di 3 sedute per Ankàla, per risultati più profondi.',
   },
   {
     q: 'Come si svolgono le sedute?',
@@ -56,7 +56,7 @@ const faqs: { q: string; a: React.ReactNode }[] = [
   },
   {
     q: 'Quante sedute servono?',
-    a: 'Dipende dal percorso. La Mappa dei Talenti può essere una sessione singola o un approfondimento nel Viaggio Completo. Per Ankàla consiglio un ciclo iniziale di 3 sedute per permettere al corpo di integrare il lavoro energetico in profondità.',
+    a: 'Dipende dal percorso. La lettura guidata della Mappa dei Talenti è un percorso di 2 incontri da un’ora (che prenoti insieme fin dall’inizio). Per Ankàla consiglio un ciclo iniziale di 3 sedute per permettere al corpo di integrare il lavoro energetico in profondità.',
   },
   {
     q: 'Questi servizi sostituiscono la medicina tradizionale?',

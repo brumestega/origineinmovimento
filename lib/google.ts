@@ -77,6 +77,11 @@ export type BookingDetails = {
   clientPhone?: string;
   reason: string;
   contactPreference?: string;
+  // Solo per la lettura guidata della Mappa (percorso di 2 incontri): indica quale
+  // dei due incontri è questo e la data dell'altro, per l'evento in calendario.
+  partIndex?: number;
+  partTotal?: number;
+  pairDateLabel?: string;
 };
 
 // Crea l'evento sul calendario e invita cliente + titolare.
@@ -86,15 +91,21 @@ export async function createBookingEvent(details: BookingDetails) {
   const start = new Date(details.startUtcIso);
   const end = new Date(start.getTime() + durationMin(details.type) * 60000);
 
+  const isPair = details.type === 'mappa' && details.partIndex && details.partTotal;
+  const partSuffix = isPair ? ` (incontro ${details.partIndex} di ${details.partTotal})` : '';
+
   const SUMMARY: Record<typeof details.type, string> = {
     call: `Call conoscitiva (gratuita) · ${details.clientName}`,
     session: `Sessione · ${details.clientName}`,
-    mappa: `Lettura Mappa dei Talenti · ${details.clientName}`,
+    mappa: `Lettura guidata Mappa dei Talenti${partSuffix} · ${details.clientName}`,
   };
   const INTRO: Record<typeof details.type, string> = {
     call: 'Call conoscitiva gratuita prenotata dal sito Origine in Movimento.',
     session: 'Sessione prenotata dal sito Origine in Movimento.',
-    mappa: 'Lettura dal vivo della Mappa dei Talenti (pacchetto premium 88€) prenotata dal sito Origine in Movimento.',
+    mappa:
+      `Lettura guidata dal vivo della Mappa dei Talenti — percorso di ${details.partTotal ?? 2} incontri (160€) — ` +
+      `prenotata dal sito Origine in Movimento.` +
+      (details.pairDateLabel ? `\nL'altro incontro del percorso: ${details.pairDateLabel}.` : ''),
   };
   const summary = SUMMARY[details.type];
   const intro = INTRO[details.type];

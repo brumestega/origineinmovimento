@@ -45,6 +45,22 @@ export default function CalcolatoriPage() {
           </a>
         </div>
       </div>
+
+      {/* CTA: dalla Mappa (gratuita) alla lettura guidata dal vivo (prenotazione) */}
+      <div className="newsletter" style={{ marginTop: 44 }}>
+        <span className="premium-badge" style={{ marginBottom: 16 }}>
+          Lettura guidata · 160€ · 2 incontri da 60 min
+        </span>
+        <h2 className="serif">Vuoi una lettura guidata della tua Mappa insieme a me?</h2>
+        <p>
+          Il calcolatore e il PDF sono un regalo, tuoi da esplorare quando vuoi. Se desideri andare in
+          profondità, un percorso di <strong>due incontri da un’ora</strong> dal vivo: li prenoti
+          entrambi ora, per un cammino strutturato e non improvvisato.
+        </p>
+        <Link className="btn" href="/prenota?tipo=mappa">
+          Prenota i due incontri
+        </Link>
+      </div>
     </div>
   );
 }
