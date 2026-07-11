@@ -87,21 +87,21 @@ Logica: non si vendono "3 tipi di consulenza" scollegate, ma diversi modi di viv
 6. Placeholder ancora da riempire quando disponibili: eventi reali in calendario, testimonianze reali definitive, immagini blog, calendario di prenotazione (Google Calendar), form contatti (non collegato a backend/email), link WhatsApp reale (wa.me)
 
 ## Elemento mancante — questionario pre-sessione
-✅ **Creato**: `Questionario-Origine-in-Movimento.docx` — questionario di consulenza su 5 Leggi Biologiche, Analisi Genealogica e Numerologia, in versione professionale (intestazione brand, righe per le risposte, dichiarazione legale). Si inserisce tra la Fase 1 (Incontro) e la Fase 2 (Ascolto), da inviare dopo la conferma della prenotazione.
+✅ **Creato**: `Questionario-Origine-in-Movimento.docx` — questionario di consulenza su Decodifica del Sintomo, Analisi Genealogica e Numerologia, in versione professionale (intestazione brand, righe per le risposte, dichiarazione legale). Si inserisce tra la Fase 1 (Incontro) e la Fase 2 (Ascolto), da inviare dopo la conferma della prenotazione.
 
 ## Sequenza del funnel — versione definitiva
 
 1. **Questionario breve** (5-6 campi: nome, contatto, motivo della richiesta) → integrato nell'ultimo passaggio del modulo di prenotazione stesso, non un'email a parte, per non aumentare l'attrito
 2. **Call conoscitiva gratuita** (30 min) → Fase 1 "Incontro" del metodo
 3. **Numerologia** → servizio principale/filo conduttore, prima analisi reale
-4. **Proposta del pacchetto più adatto alla persona** (in base a quanto emerso in call + numerologia): leggero (solo numerologia) oppure "Viaggio Completo" (con Analisi Genealogica e 5 Leggi Biologiche incluse come approfondimento)
-5. **Solo se sceglie il Viaggio Completo** → invio del questionario completo (5 Leggi Biologiche/Analisi Genealogica), via email, presentato come parte dell'esperienza premium ("per prepararci al meglio al tuo percorso")
+4. **Proposta del pacchetto più adatto alla persona** (in base a quanto emerso in call + numerologia): leggero (solo numerologia) oppure "Viaggio Completo" (con Analisi Genealogica e Decodifica del Sintomo incluse come approfondimento)
+5. **Solo se sceglie il Viaggio Completo** → invio del questionario completo (Decodifica del Sintomo/Analisi Genealogica), via email, presentato come parte dell'esperienza premium ("per prepararci al meglio al tuo percorso")
 
 **Perché in questo ordine**: il questionario approfondito (lutti, traumi, schemi familiari) è troppo intimo da chiedere a una sconosciuta prima ancora del primo contatto umano — va proposto solo a chi si è già impegnata nel percorso più profondo, non come filtro d'ingresso.
 
 ## ✅ Decisione aggiornata — Numerologia come servizio principale
 - **Numerologia**: filo conduttore e servizio principale, punto di ingresso per tutti — online e in presenza
-- **Analisi Genealogica e 5 Leggi Biologiche**: approfondimento incluso nel pacchetto "Viaggio Completo", non più etichettato come percorso di punta a sé stante
+- **Analisi Genealogica e Decodifica del Sintomo**: approfondimento incluso nel pacchetto "Viaggio Completo", non più etichettato come percorso di punta a sé stante
 - **Elenco servizi a pagamento definitivo** (lista prezzi COMPLETA):
   - Analisi numerologica (completa) — online e in presenza — **120€**
   - Trattamenti Ankàla — online e in presenza — **88€ a seduta** (si consigliano 3 sedute iniziali)

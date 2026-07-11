@@ -87,21 +87,21 @@ Logica: non si vendono "3 tipi di consulenza" scollegate, ma diversi modi di viv
 6. Placeholder ancora da riempire quando disponibili: eventi reali in calendario, testimonianze reali definitive, immagini blog, calendario di prenotazione (Google Calendar), form contatti (non collegato a backend/email), link WhatsApp reale (wa.me)
 
 ## Elemento mancante — questionario pre-sessione
-✅ **Creato**: `Questionario-Origine-in-Movimento.docx` — questionario di consulenza su Lettura del Sintomo, Analisi Genealogica e Numerologia, in versione professionale (intestazione brand, righe per le risposte, dichiarazione legale). Si inserisce tra la Fase 1 (Incontro) e la Fase 2 (Ascolto), da inviare dopo la conferma della prenotazione.
+✅ **Creato**: `Questionario-Origine-in-Movimento.docx` — questionario di consulenza su Decodifica del Sintomo, Analisi Genealogica e Numerologia, in versione professionale (intestazione brand, righe per le risposte, dichiarazione legale). Si inserisce tra la Fase 1 (Incontro) e la Fase 2 (Ascolto), da inviare dopo la conferma della prenotazione.
 
 ## Sequenza del funnel — versione definitiva
 
 1. **Questionario breve** (5-6 campi: nome, contatto, motivo della richiesta) → integrato nell'ultimo passaggio del modulo di prenotazione stesso, non un'email a parte, per non aumentare l'attrito
 2. **Call conoscitiva gratuita** (30 min) → Fase 1 "Incontro" del metodo
 3. **Numerologia** → servizio principale/filo conduttore, prima analisi reale
-4. **Proposta del pacchetto più adatto alla persona** (in base a quanto emerso in call + numerologia): leggero (solo numerologia) oppure "Viaggio Completo" (con Analisi Genealogica e Lettura del Sintomo incluse come approfondimento)
-5. **Solo se sceglie il Viaggio Completo** → invio del questionario completo (Lettura del Sintomo/Analisi Genealogica), via email, presentato come parte dell'esperienza premium ("per prepararci al meglio al tuo percorso")
+4. **Proposta del pacchetto più adatto alla persona** (in base a quanto emerso in call + numerologia): leggero (solo numerologia) oppure "Viaggio Completo" (con Analisi Genealogica e Decodifica del Sintomo incluse come approfondimento)
+5. **Solo se sceglie il Viaggio Completo** → invio del questionario completo (Decodifica del Sintomo/Analisi Genealogica), via email, presentato come parte dell'esperienza premium ("per prepararci al meglio al tuo percorso")
 
 **Perché in questo ordine**: il questionario approfondito (lutti, traumi, schemi familiari) è troppo intimo da chiedere a una sconosciuta prima ancora del primo contatto umano — va proposto solo a chi si è già impegnata nel percorso più profondo, non come filtro d'ingresso.
 
 ## ✅ Decisione aggiornata — Numerologia come servizio principale
 - **Numerologia**: filo conduttore e servizio principale, punto di ingresso per tutti — online e in presenza
-- **Analisi Genealogica e Lettura del Sintomo**: approfondimento incluso nel pacchetto "Viaggio Completo", non più etichettato come percorso di punta a sé stante
+- **Analisi Genealogica e Decodifica del Sintomo**: approfondimento incluso nel pacchetto "Viaggio Completo", non più etichettato come percorso di punta a sé stante
 - **Elenco servizi a pagamento definitivo** (lista prezzi COMPLETA):
   - Analisi numerologica (completa) — online e in presenza — **120€**
   - Trattamenti Ankàla — online e in presenza — **88€ a seduta** (si consigliano 3 sedute iniziali)
@@ -185,9 +185,11 @@ Da aggiungere quando il sito è già live e stabile, non prioritario ora.
 - Sostituiscono la medicina tradizionale? → No, supporto al benessere, non diagnosi/terapia medica
 
 ## ⚠️ Attenzione — rinominazione per motivi legali/reputazionali
-Il servizio "5 Leggi Biologiche" (legato alle teorie del dott. Hamer) è stato rinominato in **"Lettura del Sintomo"** ovunque nel sito. Motivo: Hamer è stato radiato dall'albo medico e condannato più volte in diversi paesi europei; le sue teorie sono associate a casi di morti di pazienti e procedimenti penali tuttora in corso in Italia (2025). Il nome "5 Leggi Biologiche"/Hamer non va più utilizzato pubblicamente sul sito, in nessun contenuto (blog, servizi, questionario).
+Il servizio "5 Leggi Biologiche" (legato alle teorie del dott. Hamer) è stato rinominato in **"Decodifica del Sintomo"** ovunque nel sito. Motivo: Hamer è stato radiato dall'albo medico e condannato più volte in diversi paesi europei; le sue teorie sono associate a casi di morti di pazienti e procedimenti penali tuttora in corso in Italia (2025). Il nome "5 Leggi Biologiche"/Hamer non va più utilizzato pubblicamente sul sito, in nessun contenuto (blog, servizi, questionario).
+
+**Stato (aggiornato luglio 2026)**: il nome pubblico definitivo è **"Decodifica del Sintomo"**. Tutte le occorrenze del vecchio nome nei documenti di contenuto/pianificazione sono state sostituite. Il vecchio nome resta citato *solo* in questa nota interna, come promemoria del motivo — non compare in nessun contenuto pubblico.
 
 **Ancora da fare**:
-- Rinominare il file `Questionario-Origine-in-Movimento.docx` (titolo interno da aggiornare)
+- Rinominare il file `Questionario-Origine-in-Movimento.docx` (titolo interno da aggiornare — file binario, non modificabile da qui)
 - Rafforzare il disclaimer medico ovunque questo servizio è menzionato (non solo a fine testo, ma come premessa chiara)
-- Verificare che l'articolo blog "Cosa sono le 5 Leggi Biologiche di Hamer" venga sostituito con la versione riscritta (vedi conversazione) prima della pubblicazione
+- ✅ Articolo blog riscritto: il nuovo testo "Decodifica del Sintomo: Ascoltare il Corpo Come Messaggero" è salvato in `content/blog/decodifica-del-sintomo.md`, pronto per la pubblicazione (il blog è ancora un segnaposto "presto online" nel sito, quindi l'articolo non è ancora visibile pubblicamente)
