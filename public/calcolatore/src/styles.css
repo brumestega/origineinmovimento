@@ -440,30 +440,12 @@ button.numero:hover { color: var(--accent); text-shadow: var(--glow); }
 .banner__actions { display: flex; gap: 0.5rem; }
 
 /* --------------------------------------------------------------------- */
-/* AUTENTICAZIONE — header + modal (gate dimostrativo)                   */
+/* GATE EMAIL — raccolta email + opt-in newsletter prima del risultato   */
 /* --------------------------------------------------------------------- */
-#header-auth { display: flex; align-items: center; gap: 10px; font-family: var(--font-body); font-size: 0.8rem; }
-.auth-name { color: var(--text); max-width: 14ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.auth-badge { padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 500; white-space: nowrap; }
-.auth-badge--free { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border-soft); }
-.auth-badge--standard { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--border); }
-.auth-badge--premium { background: var(--accent); color: var(--bg); }
-.btn-auth-link { background: none; border: none; color: var(--accent); font-size: 0.8rem; cursor: pointer; text-decoration: underline; padding: 4px; }
-.btn-auth-link:hover { color: var(--text); }
-
-.modal-backdrop { position: fixed; inset: 0; min-height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 24px; z-index: 200; animation: fadeIn 0.25s var(--ease); }
-.modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(28px, 5vw, 40px) clamp(22px, 4vw, 36px); width: 100%; max-width: 420px; max-height: calc(100vh - 48px); overflow-y: auto; box-shadow: var(--shadow); animation: slideUpIn 0.35s var(--ease); }
-.modal-titolo { font-family: var(--font-display); font-size: 1.6rem; font-weight: 400; color: var(--accent); text-align: center; margin: 0 0 22px; }
-.modal-tabs { display: flex; border-bottom: 1px solid var(--border-soft); margin-bottom: 22px; }
-.modal-tab { flex: 1; padding: 10px; background: none; border: none; font-family: var(--font-body); font-size: 0.82rem; font-weight: 500; letter-spacing: 0.04em; color: var(--text-2); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; }
-.modal-tab:hover { color: var(--text); }
-.modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-.modal-errore { background: color-mix(in oklab, var(--crimson) 12%, transparent); border: 1px solid color-mix(in oklab, var(--crimson) 35%, transparent); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.82rem; color: var(--crimson); margin-bottom: 16px; display: none; }
-.modal-errore.visible { display: block; }
-.modal-form { display: flex; flex-direction: column; }
-.modal-fields { margin-bottom: 8px; }
-.modal-submit { width: 100%; margin-top: 8px; padding: 0.9rem; }
-.modal-switch { text-align: center; margin-top: 14px; }
+.gate-check { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; font-size: 0.82rem; line-height: 1.5; color: var(--text-2); margin: 0.4rem 0 0.2rem; }
+.gate-check input { margin-top: 3px; accent-color: var(--accent); flex: none; }
+.gate-back { width: 100%; margin-top: 0.4rem; }
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 
 /* --------------------------------------------------------------------- */
 /* DEBUG & ERRORI                                                        */

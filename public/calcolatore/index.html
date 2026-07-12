@@ -20,7 +20,6 @@
         <span class="brand__name" data-i18n="app.title">Mappa dei Talenti</span>
       </div>
       <div class="header-controls">
-        <div id="header-auth"></div>
         <div class="lang-toggle" role="group" aria-label="Lingua / Language">
           <button type="button" data-lang-opt="it" aria-pressed="true">IT</button>
           <span class="sep" aria-hidden="true">/</span>
@@ -81,6 +80,36 @@
           </fieldset>
 
           <button class="btn btn--gold form-submit" type="submit" data-i18n="form.submit">Calcola la tua mappa</button>
+        </form>
+      </section>
+
+      <!-- SCHERMATA 1b: GATE EMAIL (raccolta email prima del risultato completo) -->
+      <section id="screen-gate" class="screen" hidden>
+        <div class="intro">
+          <h1 class="intro__title" data-i18n="gate.title">Un ultimo passo</h1>
+          <div class="intro__rule" aria-hidden="true"></div>
+          <p class="intro__subtitle" data-i18n="gate.lead">Lascia la tua email: ti mostro subito la tua Mappa completa. È il mio regalo, gratuito.</p>
+        </div>
+
+        <form id="gate-form" class="form-card" novalidate>
+          <p id="gate-error" class="form-error" role="alert" hidden></p>
+
+          <div class="field">
+            <input class="field__input" id="g-email" name="email" type="email" placeholder=" " autocomplete="email" />
+            <label class="field__label" for="g-email" data-i18n="gate.email">La tua email</label>
+            <p class="field__error" aria-live="polite"></p>
+          </div>
+
+          <label class="gate-check">
+            <input type="checkbox" id="g-newsletter" checked />
+            <span data-i18n="gate.newsletter">Iscrivimi alla newsletter per ricevere spunti e novità (puoi disiscriverti quando vuoi).</span>
+          </label>
+
+          <!-- honeypot anti-spam -->
+          <input type="text" id="g-company" name="company" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true" />
+
+          <button class="btn btn--gold form-submit" type="submit" data-i18n="gate.submit">Mostra la mia Mappa ✦</button>
+          <button type="button" id="gate-back" class="btn btn--ghost gate-back" data-i18n="gate.back">‹ Torna indietro</button>
         </form>
       </section>
 

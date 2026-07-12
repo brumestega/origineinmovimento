@@ -9,7 +9,6 @@ import { t, getCurrentLang } from './i18n.js';
 import { getSignificato, getCampoDescrizione } from './significati.js';
 import { generaNarrativa, generaRelazione } from './narrativa.js';
 import { caricaStorico, eliminaMappa } from './storage.js';
-import { login, registraUtente, getUtenteCorrente, getLivello, logout } from './auth.js';
 
 /* ===========================================================================
  * UTILITY DOM
@@ -474,9 +473,11 @@ export function rerenderSeVisibile(mappa, handlers = {}) {
 /** Torna al form, ripristinando la vista iniziale. */
 export function mostraForm() {
   const screenForm = $('#screen-form');
+  const screenGate = $('#screen-gate');
   const screenResults = $('#screen-results');
   chiudiTooltip();
   if (screenResults) { screenResults.hidden = true; screenResults.classList.remove('is-entering'); }
+  if (screenGate) { screenGate.hidden = true; }
   if (screenForm) { screenForm.hidden = false; }
   window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }
@@ -790,120 +791,6 @@ export function mostraBannerPrecedente(voce, { onRivedi } = {}) {
       el('button', { class: 'btn btn--small btn--gold', type: 'button', onclick: () => { host.innerHTML = ''; onRivedi && onRivedi(voce.mappa); } }, t('banner.review')),
       el('button', { class: 'btn btn--small btn--ghost', type: 'button', onclick: () => { banner.classList.add('is-hiding'); setTimeout(() => host.innerHTML = '', 300); } }, t('banner.ignore'))));
   host.append(banner);
-}
-
-/* ===========================================================================
- * AUTENTICAZIONE — modal login/registrazione + header
- * (gate dimostrativo; vedi avviso di sicurezza in auth.js)
- * ======================================================================== */
-
-const RE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const BADGE_SIMBOLO = { free: '', standard: ' ⭐', premium: ' ✦' };
-
-function campoModale(id, type, label, autocomplete) {
-  return el('div', { class: 'field' },
-    el('input', { class: 'field__input', id, type, placeholder: ' ', autocomplete }),
-    el('label', { class: 'field__label', for: id }, label));
-}
-const valoreCampo = (field) => field.querySelector('input')?.value ?? '';
-
-/**
- * Mostra il modal di login/registrazione.
- * @param {(utente:object)=>void} [onSuccess]
- */
-export function mostraModalAuth(onSuccess) {
-  let tab = 'login';
-
-  const backdrop = el('div', { class: 'modal-backdrop' });
-  const erroreEl = el('div', { class: 'modal-errore', role: 'alert' });
-  const mostraErrore = (msg) => { erroreEl.textContent = msg || ''; erroreEl.classList.toggle('visible', !!msg); };
-
-  const onEsc = (e) => { if (e.key === 'Escape') chiudi(); };
-  function chiudi() { document.removeEventListener('keydown', onEsc); backdrop.remove(); }
-
-  // Campi (creati una volta, riusati tra i due tab)
-  const fNome = campoModale('auth-nome', 'text', t('auth.nome'), 'name');
-  const fEmail = campoModale('auth-email', 'email', t('auth.email'), 'email');
-  const fPass = campoModale('auth-password', 'password', t('auth.password'), 'current-password');
-
-  const campiBox = el('div', { class: 'modal-fields' });
-  const tabLogin = el('button', { class: 'modal-tab', type: 'button' }, t('auth.tab.login'));
-  const tabReg = el('button', { class: 'modal-tab', type: 'button' }, t('auth.tab.register'));
-  const submitBtn = el('button', { class: 'btn btn--gold modal-submit', type: 'submit' });
-  const switchLink = el('button', { class: 'btn-auth-link', type: 'button' });
-
-  function render() {
-    const isLogin = tab === 'login';
-    tabLogin.classList.toggle('active', isLogin);
-    tabReg.classList.toggle('active', !isLogin);
-    tabLogin.setAttribute('aria-selected', String(isLogin));
-    tabReg.setAttribute('aria-selected', String(!isLogin));
-    campiBox.innerHTML = '';
-    if (!isLogin) campiBox.append(fNome);
-    campiBox.append(fEmail, fPass);
-    submitBtn.textContent = isLogin ? t('auth.submit.login') : t('auth.submit.register');
-    switchLink.textContent = isLogin ? t('auth.noAccount') : t('auth.haveAccount');
-    mostraErrore('');
-    (fEmail.querySelector('input')).focus();
-  }
-  tabLogin.onclick = () => { tab = 'login'; render(); };
-  tabReg.onclick = () => { tab = 'register'; render(); };
-  switchLink.onclick = () => { tab = tab === 'login' ? 'register' : 'login'; render(); };
-
-  const form = el('form', { class: 'modal-form', novalidate: true },
-    erroreEl, campiBox, submitBtn, el('p', { class: 'modal-switch' }, switchLink));
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = valoreCampo(fEmail).trim();
-    const password = valoreCampo(fPass);
-    const nome = valoreCampo(fNome);
-    // Validazione inline
-    if (!RE_EMAIL.test(email)) return mostraErrore(t('auth.err.email'));
-    if (password.length < 6) return mostraErrore(t('auth.err.password'));
-    if (tab === 'register' && !nome.trim()) return mostraErrore(t('auth.err.nome'));
-
-    let res;
-    if (tab === 'register') {
-      res = registraUtente({ email, password, nome });
-      if (res.ok) login({ email, password }); // auto-login dopo la registrazione
-    } else {
-      res = login({ email, password });
-    }
-    if (!res.ok) return mostraErrore(res.errore);
-    track(tab === 'register' ? 'auth_registrato' : 'auth_login', { livello: res.utente?.livello });
-    chiudi();
-    if (typeof onSuccess === 'function') onSuccess(res.utente);
-  });
-
-  const box = el('div', { class: 'modal-box', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('auth.modal.title') },
-    el('h2', { class: 'modal-titolo' }, t('auth.modal.title')),
-    el('div', { class: 'modal-tabs' }, tabLogin, tabReg),
-    form);
-
-  backdrop.append(box);
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) chiudi(); });
-  document.addEventListener('keydown', onEsc);
-  document.body.append(backdrop);
-  render();
-}
-
-/** Aggiorna l'area auth nell'header in base allo stato di sessione. */
-export function aggiornaHeaderAuth() {
-  const host = document.getElementById('header-auth');
-  if (!host) return;
-  host.innerHTML = '';
-  const utente = getUtenteCorrente();
-  if (!utente) {
-    host.append(el('button', { class: 'btn-auth-link', type: 'button', onclick: () => mostraModalAuth(() => aggiornaHeaderAuth()) }, t('auth.login')));
-    return;
-  }
-  const liv = getLivello();
-  host.append(
-    el('span', { class: 'auth-name' }, utente.nome || utente.email),
-    el('span', { class: `auth-badge auth-badge--${liv}` }, t('auth.badge.' + liv) + (BADGE_SIMBOLO[liv] || '')),
-    el('button', { class: 'btn-auth-link', type: 'button', onclick: () => { logout(); aggiornaHeaderAuth(); } }, t('auth.logout')),
-  );
 }
 
 /* ===========================================================================
