@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isEmail, nonEmpty, clean } from '@/lib/validation';
 import { isEmailConfigured, sendMappaLeadEmail } from '@/lib/email';
+import { appendLead, isSheetsConfigured } from '@/lib/google';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -65,6 +66,21 @@ export async function POST(req: NextRequest) {
     numeroDestino: toIntOrNull(numeriIn.numeroDestino),
     equilibrio: toIntOrNull(numeriIn.equilibrio),
   };
+
+  // Archiviazione su Google Sheet (best-effort, indipendente da Resend).
+  if (isSheetsConfigured()) {
+    try {
+      await appendLead({
+        nome,
+        email,
+        dataNascita: dataNascita === '—' ? '' : dataNascita,
+        newsletter,
+        fonte: 'Mappa dei Talenti',
+      });
+    } catch (err) {
+      console.error('[mappa-lead] sheet error', err);
+    }
+  }
 
   // Best-effort: se Resend non è configurato, restituisce comunque ok.
   let delivered = false;

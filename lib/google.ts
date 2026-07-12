@@ -150,3 +150,91 @@ export async function createBookingEvent(details: BookingDetails) {
 
   return res.data;
 }
+
+/* ===========================================================================
+ * GOOGLE SHEETS — archiviazione lead (calcolatori + newsletter)
+ * Riusa le stesse credenziali OAuth2 del calendario. Il refresh token deve
+ * includere ANCHE lo scope https://www.googleapis.com/auth/spreadsheets.
+ * Foglio di destinazione in GOOGLE_SHEETS_LEADS_ID (vedi .env.example).
+ * ======================================================================== */
+
+export function isSheetsConfigured(): boolean {
+  return Boolean(
+    process.env.GOOGLE_OAUTH_CLIENT_ID &&
+      process.env.GOOGLE_OAUTH_CLIENT_SECRET &&
+      process.env.GOOGLE_OAUTH_REFRESH_TOKEN &&
+      process.env.GOOGLE_SHEETS_LEADS_ID,
+  );
+}
+
+function sheetsClient() {
+  const oauth2 = new google.auth.OAuth2(
+    process.env.GOOGLE_OAUTH_CLIENT_ID,
+    process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+  );
+  oauth2.setCredentials({ refresh_token: process.env.GOOGLE_OAUTH_REFRESH_TOKEN });
+  return google.sheets({ version: 'v4', auth: oauth2 });
+}
+
+export type LeadFonte = 'Vibrazione' | 'Mappa dei Talenti' | 'Newsletter diretta';
+
+export type LeadRow = {
+  nome: string;
+  email: string;
+  dataNascita?: string;
+  newsletter: boolean;
+  fonte: LeadFonte;
+};
+
+const LEAD_HEADER = ['Nome', 'Email', 'Data di nascita', 'Newsletter', 'Fonte', 'Data'];
+let headerEnsured = false; // evita la lettura dell'intestazione a ogni append (per-istanza)
+
+// Aggiunge una riga di lead al foglio. Best-effort: chi chiama gestisce gli errori.
+export async function appendLead(lead: LeadRow): Promise<void> {
+  const spreadsheetId = process.env.GOOGLE_SHEETS_LEADS_ID as string;
+  const sheets = sheetsClient();
+
+  // Assicura l'intestazione una sola volta (se il foglio è vuoto).
+  if (!headerEnsured) {
+    try {
+      const head = await sheets.spreadsheets.values.get({ spreadsheetId, range: 'A1:F1' });
+      if (!head.data.values || head.data.values.length === 0) {
+        await sheets.spreadsheets.values.update({
+          spreadsheetId,
+          range: 'A1:F1',
+          valueInputOption: 'RAW',
+          requestBody: { values: [LEAD_HEADER] },
+        });
+      }
+      headerEnsured = true;
+    } catch (_) {
+      /* se la lettura fallisce, proviamo comunque l'append qui sotto */
+    }
+  }
+
+  const data = new Intl.DateTimeFormat('it-IT', {
+    timeZone: TIMEZONE,
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date());
+
+  const row = [
+    lead.nome || '',
+    lead.email || '',
+    lead.dataNascita || '',
+    lead.newsletter ? 'sì' : 'no',
+    lead.fonte,
+    data,
+  ];
+
+  await sheets.spreadsheets.values.append({
+    spreadsheetId,
+    range: 'A1',
+    valueInputOption: 'RAW',
+    insertDataOption: 'INSERT_ROWS',
+    requestBody: { values: [row] },
+  });
+}
