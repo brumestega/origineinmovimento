@@ -74,12 +74,15 @@ function popolaMesi() {
 /* VALIDAZIONE FORM                                                        */
 /* ----------------------------------------------------------------------- */
 function leggiForm() {
+  // L'anno di riferimento non è più chiesto nel form: se il campo non esiste,
+  // validaInput/calcolaMappa lo impostano di default all'anno corrente.
+  const annoScelto = $('#f-anno-scelto');
   return {
     nome: $('#f-nome').value,
     giorno: $('#f-giorno').value,
     mese: $('#f-mese').value,
     anno: $('#f-anno').value,
-    annoScelto: $('#f-anno-scelto').value,
+    annoScelto: annoScelto ? annoScelto.value : '',
   };
 }
 
@@ -102,7 +105,7 @@ function validaForm() {
   set('#f-giorno', Number(v.giorno) >= 1 && Number(v.giorno) <= 31, 'form.error.giorno');
   set('#f-mese', Number(v.mese) >= 1 && Number(v.mese) <= 12, 'form.error.mese');
   set('#f-anno', Number(v.anno) >= 1900 && Number(v.anno) <= annoCorrente, 'form.error.anno');
-  set('#f-anno-scelto', Number(v.annoScelto) >= 1900 && Number(v.annoScelto) <= annoCorrente + 200, 'form.error.annoScelto');
+  // L'anno di riferimento è stato rimosso dal form: nessuna validazione qui.
   return ok;
 }
 
@@ -200,10 +203,6 @@ function init() {
   applicaColori();
   initTema();
   initLingua();
-
-  // Pre-compila anno di riferimento con l'anno corrente
-  const annoRef = $('#f-anno-scelto');
-  if (annoRef && !annoRef.value) annoRef.value = new Date().getFullYear();
 
   // Submit del form
   const form = $('#mappa-form');

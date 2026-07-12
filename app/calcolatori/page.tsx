@@ -34,11 +34,12 @@ export default function CalcolatoriPage() {
         </div>
 
         <div className="accent-card">
-          <span className="eyebrow-sm">Strumento completo</span>
+          <span className="eyebrow-sm">Regalo gratuito</span>
           <h3 className="serif">Mappa dei Talenti</h3>
           <p>
             Dalla tua data di nascita, la tua mappa numerologica completa: talenti, schemi familiari
-            e direzione di vita, con export in PDF. Si apre nell’applicazione dedicata.
+            e direzione di vita, con export in PDF. Interamente gratuita, si apre nell’applicazione
+            dedicata.
           </p>
           <a className="btn" href="/calcolatore/index.html" target="_blank" rel="noopener">
             Apri la Mappa dei Talenti

@@ -42,6 +42,10 @@ const translations = {
     'share.copied': 'Link copiato negli appunti',
     'share.copyManual': 'Copia questo link:',
     'section.sintesi': 'La tua mappa in sintesi',
+    'results.riepilogoTitle': 'I tuoi numeri chiave',
+    'results.riepilogoNote': 'Il cuore della tua mappa in cinque numeri. Il report completo — tutto gratuito — è qui sotto.',
+    'results.showAll': 'Mostra tutto il report',
+    'results.hideAll': 'Nascondi il dettaglio',
     'results.printedOn': 'Mappa generata il',
 
     'section.base': 'I Tre Numeri Fondamentali',
@@ -175,6 +179,10 @@ const translations = {
     'share.copied': 'Link copied to clipboard',
     'share.copyManual': 'Copy this link:',
     'section.sintesi': 'Your map at a glance',
+    'results.riepilogoTitle': 'Your key numbers',
+    'results.riepilogoNote': 'The heart of your map in five numbers. The full report — all free — is right below.',
+    'results.showAll': 'Show the full report',
+    'results.hideAll': 'Hide the details',
     'results.printedOn': 'Map generated on',
 
     'section.base': 'The Three Core Numbers',

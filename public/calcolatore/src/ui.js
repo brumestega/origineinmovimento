@@ -283,6 +283,30 @@ function buildNumeroDestino(m) {
         sig.keyword ? el('span', { class: 'destino-verbo' }, ` · ${sig.keyword}`) : null)));
 }
 
+/* RIEPILOGO — i cinque numeri chiave, in evidenza in cima ai risultati.
+   Interamente gratuito: è un estratto del report completo che segue sotto. */
+function buildRiepilogo(m) {
+  const voci = [
+    ['desiderio', t('campo.desiderio'), m.base.desiderio],
+    ['risposta', t('campo.risposta'), m.base.risposta],
+    ['pp', t('campo.pp'), m.personalitaProfonda.risultato],
+    ['numeroDestino', t('section.numeroDestino'), m.numeroDestino],
+    ['equilibrio', t('campo.equilibrio'), m.equilibrio],
+  ];
+  const righe = voci.map(([campo, label, valore]) => {
+    const sig = getSignificato(valore, getCurrentLang());
+    return el('div', { class: 'riepilogo-row' },
+      el('span', { class: 'riepilogo-row__label' }, label),
+      el('span', { class: 'riepilogo-row__leader', 'aria-hidden': 'true' }),
+      el('span', { class: 'riepilogo-row__val' },
+        numeroEl(valore, { campo, etichetta: label, size: 'sm' }),
+        (sig && sig.nome) ? el('span', { class: 'riepilogo-row__nome' }, sig.nome) : null));
+  });
+  return sezione('riepilogo', t('results.riepilogoTitle'),
+    el('p', { class: 'riepilogo-note' }, t('results.riepilogoNote')),
+    el('div', { class: 'riepilogo' }, ...righe));
+}
+
 /* Sintesi narrativa (legge la mappa nel suo insieme) */
 function buildNarrativa(mappa) {
   const paras = generaNarrativa(mappa, getCurrentLang());
@@ -346,8 +370,10 @@ function popolaRisultati(mappa, handlers = {}) {
   chiudiTooltip(); // chiude eventuali popover di una mappa precedente
   try {
     content.innerHTML = '';
-    content.append(
-      buildIntestazione(mappa),
+
+    // Report completo: tutte le sezioni, sempre gratuite, ma collassate di
+    // default. Il riepilogo dei numeri chiave resta in evidenza in cima.
+    const dettaglio = el('div', { class: 'result-detail', id: 'result-detail', hidden: true },
       buildIndice(),
       buildNarrativa(mappa),
       buildBase(mappa),
@@ -359,10 +385,35 @@ function popolaRisultati(mappa, handlers = {}) {
       buildGiustificazioni(mappa),
       buildSuperSequenza(mappa),
       buildNumeroDestino(mappa),
-      buildFooter(handlers),
     );
     const dbg = buildDebug(mappa);
-    if (dbg) content.append(dbg);
+    if (dbg) dettaglio.append(dbg);
+
+    // Pulsante "Mostra tutto il report" / "Nascondi il dettaglio".
+    let animato = false;
+    const toggle = el('button', {
+      class: 'btn btn--gold result-detail__toggle', type: 'button',
+      'aria-controls': 'result-detail', 'aria-expanded': 'false',
+    }, t('results.showAll'));
+    toggle.addEventListener('click', () => {
+      const apri = dettaglio.hidden;
+      dettaglio.hidden = !apri;
+      toggle.textContent = apri ? t('results.hideAll') : t('results.showAll');
+      toggle.setAttribute('aria-expanded', String(apri));
+      if (apri) {
+        if (!animato) { attivaAnimazioniSezioni(dettaglio); animato = true; }
+        track('mappa_dettaglio_aperto');
+        if (!prefersReducedMotion()) dettaglio.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    content.append(
+      buildIntestazione(mappa),
+      buildRiepilogo(mappa),
+      el('div', { class: 'result-detail__bar' }, toggle),
+      dettaglio,
+      buildFooter(handlers),
+    );
   } catch (err) {
     console.error('[ui] errore di rendering:', err);
     content.innerHTML = '';
