@@ -590,12 +590,27 @@ select.input-box { appearance: none; -webkit-appearance: none; background-image:
 }
 .vibr-pecul { font-size: 13.5px; line-height: 1.7; color: var(--body); font-weight: 300; max-width: 440px; margin: 12px auto 0; }
 
+/* Pastiglia colore (cromoterapia) associata al numero */
+.vibr-swatch {
+  display: inline-block; width: 16px; height: 16px; border-radius: 50%; flex: none;
+  border: 1px solid rgba(0, 0, 0, .18); box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
+}
+.vibr-swatch-sm { width: 11px; height: 11px; }
+.vibr-color {
+  display: inline-flex; align-items: center; gap: 8px; margin: 16px auto 0;
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--body);
+}
+.vibr-card-color { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-top: 10px; }
+
 .vibr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
 .vibr-card {
   border: 1px solid var(--border-soft); border-radius: 14px; padding: 22px 22px 20px;
   background: var(--card); box-shadow: var(--shadow-card);
 }
-.vibr-card-h { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.vibr-card-h {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+}
 .vibr-card-motto { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; line-height: 1.4; color: var(--ink); margin-bottom: 8px; }
 .vibr-card-pecul { font-size: 13px; line-height: 1.6; color: var(--body); font-weight: 300; }
 
