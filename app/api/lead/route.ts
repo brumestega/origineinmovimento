@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isEmail, nonEmpty, clean } from '@/lib/validation';
 import { calcolaVibrazione } from '@/lib/numerologia';
 import { isEmailConfigured, sendVibrazioneLeadEmail } from '@/lib/email';
+import { appendLead, isSheetsConfigured } from '@/lib/google';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -48,6 +49,20 @@ export async function POST(req: NextRequest) {
       { error: 'Il nome inserito non contiene lettere valide.' },
       { status: 400 },
     );
+  }
+
+  // Archiviazione su Google Sheet (best-effort, indipendente da Resend).
+  if (isSheetsConfigured()) {
+    try {
+      await appendLead({
+        nome: `${nome} ${cognome}`.trim(),
+        email,
+        newsletter,
+        fonte: 'Vibrazione',
+      });
+    } catch (err) {
+      console.error('[lead] sheet error', err);
+    }
   }
 
   // Best-effort: se Resend non è configurato, restituisce comunque il risultato.

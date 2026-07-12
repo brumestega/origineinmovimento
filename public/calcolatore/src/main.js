@@ -8,7 +8,7 @@ import { calcolaMappa, validaInput, verificaCalcoli } from './calculator.js';
 import { t, setLang, getCurrentLang, applicaTraduzioniDOM, onLangChange } from './i18n.js';
 import {
   mostraRisultati, rerenderSeVisibile, mostraForm, mostraLoader, apriStorico, chiudiStorico,
-  mostraDialogSalva, mostraBannerPrecedente, aggiornaHeaderAuth, generaPDF, mostraToast,
+  mostraDialogSalva, mostraBannerPrecedente, generaPDF, mostraToast,
 } from './ui.js';
 import {
   salvaMappa, caricaUltimaMappa, salvaTema, caricaTema, salvaLang, caricaLang, storageDisponibile,
@@ -48,7 +48,6 @@ function initLingua() {
   onLangChange(() => {
     aggiornaToggleLingua();
     popolaMesi();
-    aggiornaHeaderAuth(); // ritraduce "Accedi/Esci" e i badge
     rerenderSeVisibile(ultimaMappaCalcolata, handlersRisultati); // ritraduce le etichette dei risultati
   });
 }
@@ -74,12 +73,15 @@ function popolaMesi() {
 /* VALIDAZIONE FORM                                                        */
 /* ----------------------------------------------------------------------- */
 function leggiForm() {
+  // L'anno di riferimento non è più chiesto nel form: se il campo non esiste,
+  // validaInput/calcolaMappa lo impostano di default all'anno corrente.
+  const annoScelto = $('#f-anno-scelto');
   return {
     nome: $('#f-nome').value,
     giorno: $('#f-giorno').value,
     mese: $('#f-mese').value,
     anno: $('#f-anno').value,
-    annoScelto: $('#f-anno-scelto').value,
+    annoScelto: annoScelto ? annoScelto.value : '',
   };
 }
 
@@ -102,7 +104,7 @@ function validaForm() {
   set('#f-giorno', Number(v.giorno) >= 1 && Number(v.giorno) <= 31, 'form.error.giorno');
   set('#f-mese', Number(v.mese) >= 1 && Number(v.mese) <= 12, 'form.error.mese');
   set('#f-anno', Number(v.anno) >= 1900 && Number(v.anno) <= annoCorrente, 'form.error.anno');
-  set('#f-anno-scelto', Number(v.annoScelto) >= 1900 && Number(v.annoScelto) <= annoCorrente + 200, 'form.error.annoScelto');
+  // L'anno di riferimento è stato rimosso dal form: nessuna validazione qui.
   return ok;
 }
 
@@ -158,31 +160,87 @@ function compilaForm(i) {
   document.querySelectorAll('#mappa-form .field__input').forEach((c) => c.closest('.field')?.classList.toggle('field--filled', !!c.value));
 }
 function apriDaCondivisione(input) {
-  try { const valido = validaInput(input); compilaForm(valido); eseguiCalcolo(valido); track('mappa_condivisa_aperta'); }
-  catch (_) { /* link non valido: ignora, resta il form */ }
+  // Un link condiviso mostra direttamente il risultato, senza gate email
+  // (chi apre il link non sta calcolando la propria mappa).
+  try {
+    const valido = validaInput(input);
+    compilaForm(valido);
+    const mappa = calcolaMappa(valido);
+    ultimaMappaCalcolata = mappa;
+    salvaMappa(mappa);
+    mostraRisultati(mappa, handlersRisultati);
+    track('mappa_condivisa_aperta');
+  } catch (_) { /* link non valido: ignora, resta il form */ }
 }
 
 let ultimaMappaCalcolata = null;
+let mappaInAttesaGate = null; // mappa calcolata, in attesa dell'email prima di rivelarla
 
+// Calcola dal form e mostra il gate email. La Mappa è interamente gratuita:
+// come nel calcolatore Vibrazione, l'email si raccoglie PRIMA di rivelare il
+// risultato completo, ma la raccolta non deve mai bloccare il regalo.
 function eseguiCalcolo(input) {
   try {
     const valido = validaInput(input);
-    mostraLoader(true);
     const mappa = calcolaMappa(valido);
     ultimaMappaCalcolata = mappa;
     salvaMappa(mappa);
     aggiornaHash(valido); // rende l'URL condivisibile
-    setTimeout(() => {
-      mostraLoader(false);
-      mostraRisultati(mappa, handlersRisultati);
-    }, Math.max(0, config.loaderDelay));
     track('mappa_calcolata', { destino: mappa.numeroDestino });
+    mostraGate(mappa);
   } catch (err) {
     mostraLoader(false);
     console.error('[main] calcolo fallito:', err);
     const host = $('#form-error');
     if (host) { host.textContent = err.message || t('error.generic'); host.hidden = false; }
   }
+}
+
+// Mostra la schermata gate (email + opt-in newsletter) al posto del form.
+function mostraGate(mappa) {
+  mappaInAttesaGate = mappa;
+  const gateErr = $('#gate-error');
+  if (gateErr) gateErr.hidden = true;
+  const form = $('#screen-form');
+  const gate = $('#screen-gate');
+  if (form) form.hidden = true;
+  if (gate) gate.hidden = false;
+  window.scrollTo({ top: 0, behavior: 'auto' });
+  const email = $('#g-email');
+  if (email) setTimeout(() => email.focus(), 60);
+}
+
+// Rivela il risultato completo (loader + schermata risultati).
+function rivelaRisultato(mappa) {
+  mostraLoader(true);
+  setTimeout(() => {
+    mostraLoader(false);
+    mostraRisultati(mappa, handlersRisultati);
+  }, Math.max(0, config.loaderDelay));
+}
+
+// Notifica a Silvia il lead (email + newsletter), best-effort: non blocca la
+// rivelazione del risultato se la rete/Resend non rispondono.
+function inviaLeadMappa(mappa, email, newsletter, company) {
+  const i = mappa.input;
+  try {
+    fetch('/api/mappa/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome: i.nome, email, newsletter, company,
+        giorno: i.giorno, mese: i.mese, anno: i.anno,
+        numeri: {
+          desiderio: mappa.base.desiderio,
+          risposta: mappa.base.risposta,
+          personalitaProfonda: mappa.personalitaProfonda.risultato,
+          numeroDestino: mappa.numeroDestino,
+          equilibrio: mappa.equilibrio,
+        },
+      }),
+    }).catch(() => { /* best-effort */ });
+  } catch (_) { /* best-effort */ }
+  track('mappa_lead', { newsletter });
 }
 
 function riapriMappa(mappa) {
@@ -200,10 +258,6 @@ function init() {
   applicaColori();
   initTema();
   initLingua();
-
-  // Pre-compila anno di riferimento con l'anno corrente
-  const annoRef = $('#f-anno-scelto');
-  if (annoRef && !annoRef.value) annoRef.value = new Date().getFullYear();
 
   // Submit del form
   const form = $('#mappa-form');
@@ -238,6 +292,30 @@ function init() {
     });
   }
 
+  // Gate email: raccoglie email + opt-in newsletter prima di rivelare il risultato.
+  const gateForm = $('#gate-form');
+  if (gateForm) {
+    const RE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    gateForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const errHost = $('#gate-error');
+      const email = ($('#g-email')?.value || '').trim();
+      if (!RE_EMAIL.test(email)) {
+        if (errHost) { errHost.textContent = t('gate.err.email'); errHost.hidden = false; }
+        return;
+      }
+      if (errHost) errHost.hidden = true;
+      const newsletter = Boolean($('#g-newsletter')?.checked);
+      const company = $('#g-company')?.value || '';
+      const mappa = mappaInAttesaGate;
+      if (!mappa) { mostraForm(); return; }
+      inviaLeadMappa(mappa, email, newsletter, company); // best-effort, non blocca
+      $('#screen-gate').hidden = true;
+      rivelaRisultato(mappa);
+    });
+  }
+  $('#gate-back')?.addEventListener('click', () => mostraForm());
+
   // Header: lingua, tema, storico
   document.querySelectorAll('[data-lang-opt]').forEach((b) => {
     b.addEventListener('click', () => { const l = b.dataset.langOpt; setLang(l); salvaLang(l); track('lingua_cambiata', { lang: l }); });
@@ -252,9 +330,6 @@ function init() {
   }
   $('#storico-close')?.addEventListener('click', chiudiStorico);
   $('#storico-backdrop')?.addEventListener('click', chiudiStorico);
-
-  // Header autenticazione (pulsante Accedi / nome+badge+Esci)
-  aggiornaHeaderAuth();
 
   // Mappa condivisa via link (ha priorità sul banner), altrimenti banner mappa precedente
   const condiviso = leggiInputCondiviso();

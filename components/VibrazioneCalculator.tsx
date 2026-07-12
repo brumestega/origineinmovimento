@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { calcolaVibrazione, significato, VibrazioneResult } from '@/lib/numerologia';
+import { calcolaVibrazione, colore, significato, VibrazioneResult } from '@/lib/numerologia';
 
 const WA_NUMBER = '393479005251';
 
@@ -142,22 +142,46 @@ export default function VibrazioneCalculator() {
             {significato(result.espressione).peculiarita && (
               <p className="vibr-pecul">{significato(result.espressione).peculiarita}</p>
             )}
+            <div className="vibr-color">
+              <span
+                className="vibr-swatch"
+                style={{ background: colore(result.espressione).hex }}
+                aria-hidden
+              />
+              <span>Colore · {colore(result.espressione).nome}</span>
+            </div>
           </div>
 
           <div className="vibr-grid">
-            <div className="vibr-card">
-              <div className="vibr-card-h">Anima · {result.anima}</div>
+            <div className="vibr-card" style={{ borderTop: `3px solid ${colore(result.anima).hex}` }}>
+              <div className="vibr-card-h">
+                <span
+                  className="vibr-swatch vibr-swatch-sm"
+                  style={{ background: colore(result.anima).hex }}
+                  aria-hidden
+                />
+                Anima · {result.anima}
+              </div>
               <p className="vibr-card-motto">«{significato(result.anima).motto}»</p>
               {significato(result.anima).peculiarita && (
                 <p className="vibr-card-pecul">{significato(result.anima).peculiarita}</p>
               )}
+              <p className="vibr-card-color">Colore · {colore(result.anima).nome}</p>
             </div>
-            <div className="vibr-card">
-              <div className="vibr-card-h">Personalità · {result.personalita}</div>
+            <div className="vibr-card" style={{ borderTop: `3px solid ${colore(result.personalita).hex}` }}>
+              <div className="vibr-card-h">
+                <span
+                  className="vibr-swatch vibr-swatch-sm"
+                  style={{ background: colore(result.personalita).hex }}
+                  aria-hidden
+                />
+                Personalità · {result.personalita}
+              </div>
               <p className="vibr-card-motto">«{significato(result.personalita).motto}»</p>
               {significato(result.personalita).peculiarita && (
                 <p className="vibr-card-pecul">{significato(result.personalita).peculiarita}</p>
               )}
+              <p className="vibr-card-color">Colore · {colore(result.personalita).nome}</p>
             </div>
           </div>
 

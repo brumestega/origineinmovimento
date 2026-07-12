@@ -184,3 +184,33 @@ const EMPTY: Significato = { motto: '', peculiarita: '', doti: '', sfide: '', sc
 export function significato(n: number): Significato {
   return SIGNIFICATI[n] ?? EMPTY;
 }
+
+// Colore associato a ciascun numero (cromoterapia). La tabella copre le cifre 1–9;
+// i numeri maestri (11/22/33) ereditano il colore della loro cifra ridotta (11→2, 22→4, 33→6).
+export type Colore = { nome: string; hex: string };
+
+export const COLORI: Record<number, Colore> = {
+  1: { nome: 'Rosso', hex: '#A83232' },
+  2: { nome: 'Arancio', hex: '#C07040' },
+  3: { nome: 'Giallo', hex: '#C4A800' },
+  4: { nome: 'Verde', hex: '#2E6B30' },
+  5: { nome: 'Blu Navy', hex: '#2A3A8C' },
+  6: { nome: 'Indaco', hex: '#4A5A6A' },
+  7: { nome: 'Viola', hex: '#4A2080' },
+  8: { nome: 'Rosa', hex: '#C06090' },
+  9: { nome: 'Oro', hex: '#C4973A' },
+};
+
+// Riduce qualsiasi numero (compresi i maestri) a una cifra 1–9 per leggerne il colore.
+function toDigit(n: number): number {
+  while (n > 9) {
+    n = String(n)
+      .split('')
+      .reduce((a, d) => a + Number(d), 0);
+  }
+  return n;
+}
+
+export function colore(n: number): Colore {
+  return COLORI[toDigit(n)] ?? { nome: '', hex: '' };
+}
